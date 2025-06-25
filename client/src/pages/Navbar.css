@@ -1,8 +1,8 @@
-/* nav{
+nav{
     width: 200%;
-    height: 10%; */
+    height: 10%;
     /* background: #0f2500; */
-    /* color: #fff;
+    color: #fff;
     padding: 4px 0px;
     position: fixed;
     top: 0;
@@ -12,9 +12,9 @@
     justify-content: space-between;
     z-index:10;
 
-} */
+}
 
-/* .logo {
+.logo {
     width: 100px;
     height: 60px;
 
@@ -80,4 +80,4 @@ nav ul li{
       
     }
   
-  } */
+  }
