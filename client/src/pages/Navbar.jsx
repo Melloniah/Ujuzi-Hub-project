@@ -6,40 +6,65 @@ import { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom';
 
 const Navbar = () => {
-
     const [sticky, setSticky] = useState(false);
+    const [mobileMenu, setMobileMenu] = useState(false);
+  
+    useEffect(() => {
+      const handleScroll = () => {
+        setSticky(window.scrollY > 50);
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+  
 
-    useEffect(()=>{
-        window.addEventListener('scroll', ()=>{
-            window.scrollY > 50 ? setSticky(true) : setSticky(false);
-
-        })
-    },[])
-
-    const [mobileMenu, setMobileMenu]= useState(false);
-    const toggleMenu = ()=>{
-        mobileMenu? setMobileMenu(false) : setMobileMenu (true);
-
-    }
-
-
-  return (
-    <nav className= {`container ${sticky? 'dark-nav' : 'hide-mobile-menu'}`}>
-        {/* <img src= {logo} alt='' className='logo'/> */}
+    const toggleMenu = () => {
+      setMobileMenu((prev) => !prev);
+    };
+  
+    return (
+      <nav className={`container ${sticky ? "dark-nav" : ""}`}>
+        {/* <img src={logo} alt="Logo" className="logo" /> */}
+  
         
-        <ul className={mobileMenu?'':''}>
-            <li><RouterLink to='/'>Home</RouterLink></li>
-
-            {/* <li><ScrollLink to='mt-4' smooth={true} offset={-260} duration={500}>Home</ScrollLink></li> */}
-            <li><RouterLink to='/tools'>Services</RouterLink></li>
-            <li><RouterLink to='/about'>About Us</RouterLink></li>
-            <li> <RouterLink to='/contact'> Contact Us </RouterLink></li>
-            <li> <RouterLink to='/container-login'>LogIn</RouterLink></li>
-            <img src={menu_icon} alt="" className='menu-icon' onClick={toggleMenu}/>
+        <img
+          src={menu_icon}
+          alt="Menu Icon"
+          className="menu-icon"
+          onClick={toggleMenu}
+        />
+  
+        {/* Nav Links */}
+        <ul className={mobileMenu ? "" : "hide-mobile-menu"}>
+          <li>
+            <RouterLink to="/" onClick={() => setMobileMenu(false)}>
+              Home
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/tools" onClick={() => setMobileMenu(false)}>
+              Services
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/about" onClick={() => setMobileMenu(false)}>
+              About Us
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/contact" onClick={() => setMobileMenu(false)}>
+              Contact Us
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/container-login" onClick={() => setMobileMenu(false)}>
+              LogIn
+            </RouterLink>
+          </li>
         </ul>
-
-    </nav>
-  )
-}
-
-export default Navbar;
+      </nav>
+    );
+  };
+  
+  export default Navbar;
