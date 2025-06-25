@@ -6,6 +6,8 @@ function SignupForm({ onSuccess }) {
   const[name, setName ] = useState("")
   const [email,setEmail] =useState("")
   const [password, setPassword] = useState("");
+  const [phonenumber, setPhonenumber] = useState("")
+  const [county, setCounty] = useState("")
   const [error, setError] = useState("")
   
 
@@ -37,7 +39,7 @@ function SignupForm({ onSuccess }) {
 
       <input
         name="name"
-        placeholder="Full Name"
+        placeholder="userName"
         value={name}
         onChange={e => setName(e.target.value)}
         required
@@ -58,6 +60,24 @@ function SignupForm({ onSuccess }) {
         placeholder="Password"
         value={password}
         onChange={e => setPassword(e.target.value)}
+        required
+      />
+
+      <input
+        type="phoneNumber"
+        name="phoneNumber"
+        placeholder="PhoneNumber"
+        value={phonenumber}
+        onChange={e => setPhonenumber(e.target.value)}
+        required
+      />
+
+      <input
+        type="county"
+        name="county"
+        placeholder="Enter your county..."
+        value={county}
+        onChange={e => setCounty(e.target.value)}
         required
       />
 
