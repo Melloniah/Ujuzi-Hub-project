@@ -1,8 +1,8 @@
 .hero {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(rgba(8,0,58,0.7),rgba(8,0,58,0.7)), url('/home/brian/Development/code/phase-4/Ujuzi-Hub-project/client/src/Assets/Heroo.jpg');
-    background-size: cover;
+    background: linear-gradient(rgba(8,0,58,0.7),rgba(8,0,58,0.7)), url("../Assets/Heroo.jpg");
+
     background-position: center;
     color: #fff;
     display: flex;
