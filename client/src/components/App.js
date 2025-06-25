@@ -2,11 +2,14 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Booking from "../pages/Booking";
-import Review from "../pages/Review";
+import Services from "../pages/Services";
 import Hero from "../pages/Hero";
 import Navbar from "../pages/Navbar";
 import Footer from "../pages/Footer";
 import Contact from "../pages/Contact";
+import FundiDetail from "./pages/FundiDetail";
+import BookingForm from "./components/BookingForm";
+import ReviewForm from "./components/ReviewForm";
 
 function App() {
   return (
@@ -24,7 +27,10 @@ function App() {
           }
         />
         <Route path="/booking" element={<Booking />} />
-        <Route path="/review" element={<Review />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/fundi/:id" element={<FundiDetail />} />
+        <Route path="/fundi/:id/book" element={<BookingForm />} />
+        <Route path="/fundi/:id/review" element={<ReviewForm />} />
       </Routes>
 
       <Footer />
