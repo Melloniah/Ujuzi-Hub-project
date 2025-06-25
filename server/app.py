@@ -1,11 +1,60 @@
 #!/usr/bin/env python3
 
 # Standard library imports
+import os
 
+# # Generate the environment variables (.env file)
+# from dotenv import load_dotenv
+# load_dotenv()
+
+# Remote library imports
+from flask import Flask
+from flask_cors import CORS
+from flask_migrate import Migrate
+from flask_restful import Api
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import MetaData
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
 # Remote library imports
 from flask import request, make_response, jsonify
 from sqlalchemy.exc import IntegrityError
 from flask_restful import Resource
+
+# Local imports
+
+# Instantiate app, set attributes
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ujuzi.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.json.compact = False
+
+# JWT settings #
+app.config['JWT_SECRET_KEY'] = b'\xc9\x9b\x1f\x12\x12\xfb\x80\xb9\x94\xb0C+\x95\xc4Mr' ## os.environ.get("JWT_SECRET_KEY") or "app-secret-key"
+app.config['JWT_TOKEN_LOCATION'] = ["cookies"]
+app.config['JWT_ACCESS_COOKIE_NAME'] = "access_token_cookie"
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False  # or True with CSRF token (frontend support)
+app.config["JWT_VERIFY_SUB"] = False # Test # Optional
+app.config["JWT_COOKIE_SECURE"] = False # True in production
+app.config["JWT_COOKIE_SAMESITE"] = "Lax"  # or 'None' -if using HTTPS cross-origin
+
+
+
+# Define metadata and instantiate db (without app yet)
+metadata = MetaData(naming_convention={
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+})
+db = SQLAlchemy(metadata=metadata)
+
+# Then initialize
+db.init_app(app)
+migrate = Migrate(app, db)
+bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
+# Instantiate REST API
+api = Api(app)
+# Instantiate CORS
+CORS(app)
 
 # JWT
 from flask_jwt_extended import (
@@ -16,11 +65,8 @@ from flask_jwt_extended import (
     unset_jwt_cookies
 )
 
-
-# Local imports
-from config import app, db, api, jwt, bcrypt
-# Add your model imports
-from models import User, Booking #
+#  model imports
+from models import User, Booking, Review, Fundi, County 
 
 
 # Views go here!
@@ -43,7 +89,6 @@ class Signup(Resource):
         password = data.get('password') 
         email = data.get('email')
         phone_number = data.get('phone_number')
-        county_id = data.get('county_id') 
 
         if not username or not email:
            return {'error': "No user details provided"}, 400
@@ -53,8 +98,7 @@ class Signup(Resource):
                 username=username,
                 email=email,
                 phone_number=phone_number,
-                # password=password, 
-                county_id=county_id
+                # Remoed couty_id
             )
             
             password_hash = bcrypt.generate_password_hash(
@@ -140,7 +184,7 @@ api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Logout, '/logout', endpoint='logout')
 
 # Model-based Routes
-class Booking(Resource):
+class BookingResource(Resource):
 
     def get(self):
         booking = [booking.to_dict() for booking in Booking.query.all()]
@@ -208,11 +252,11 @@ class BookingByID(Resource):
 
         return make_response('', 204)
 
-api.add_resource(Booking, '/booking', endpoint='booking')
-api.add_resource(Booking, '/booking/<int:id>', endpoint='bookingbyid')
+api.add_resource(BookingResource, '/booking', endpoint='booking')
+api.add_resource(BookingByID, '/booking/<int:id>', endpoint='bookingbyid')
 
 # Review CRUD
-class Review(Resource):
+class ReviewResource(Resource):
 
     def get(self):
         reviews = [review.to_dict() for review in Review.query.all()]
@@ -274,11 +318,11 @@ class ReviewByID(Resource):
 
         return make_response('', 204)
 
-api.add_resource(Review, '/reviews', endpoint='reviews')
+api.add_resource(ReviewResource, '/reviews', endpoint='reviews')
 api.add_resource(ReviewByID, '/reviews/<int:id>', endpoint='reviewbyid')
 
 # Fundi CRUD
-class Fundi(Resource):
+class FundiResource(Resource):
 
     def get(self):
         fundis = [fundi.to_dict() for fundi in Fundi.query.all()]
@@ -300,6 +344,7 @@ class Fundi(Resource):
                 phonenumber=data.get('phonenumber'),
                 email=data.get('email'),
                 service_id=data.get('service_id'),
+                county_id=data.get('county_id'), # Added county_id
             )
 
             password_hash = bcrypt.generate_password_hash(
@@ -310,7 +355,7 @@ class Fundi(Resource):
             db.session.add(new_fundi)
             db.session.commit()
 
-            response = make_response(new_fundi.to_dict(), 201)
+            response = make_response(new_fundi.to_dict(rules=('-password_hash',)), 201) # Added rules
             
             return response
         
@@ -325,7 +370,7 @@ class FundiByID(Resource):
         if not fundi:
             return {"error": "Fundi not found."}, 404
 
-        return make_response(fundi.to_dict(), 200)
+        return make_response(fundi.to_dict(rules=('-password_hash',)), 200) # Exclude password
 
     def patch(self, id):
         data = request.get_json()
@@ -333,9 +378,17 @@ class FundiByID(Resource):
 
         if not fundi:
             return {"error": "Fundi not found."}, 404
+        
+        ALLOWED_FIELDS = {'name', 'price', 'phonenumber', 'email', 'service_id', 'county_id'}
 
         for attr in data:
-            setattr(fundi, attr, data[attr])
+            if attr == 'password':
+                # Allow updating/changing password
+                password_hash = bcrypt.generate_password_hash(data['password'].encode('utf-8'))
+                fundi.password_hash = password_hash.decode('utf-8')
+            
+            elif attr in ALLOWED_FIELDS:
+                setattr(fundi, attr, data[attr])
 
         db.session.commit()
 
@@ -352,8 +405,75 @@ class FundiByID(Resource):
 
         return make_response('', 204)
 
-api.add_resource(Fundi, '/fundis', endpoint='fundis')
+api.add_resource(FundiResource, '/fundis', endpoint='fundis')
 api.add_resource(FundiByID, '/fundis/<int:id>', endpoint='fundibyid')
+
+# County CRUD
+class CountyResource(Resource):
+
+    def get(self):
+        counties = [county.to_dict() for county in County.query.all()]
+
+        if not counties:
+            return {"error": "No counties found."}, 404
+
+        return make_response(jsonify(counties), 200)
+
+    def post(self):
+        data = request.get_json()
+
+        try:
+            new_county = County(
+                name=data.get('name'),
+            )
+    
+            db.session.add(new_county)
+            db.session.commit()
+
+            response = make_response(new_county.to_dict(), 201)
+            
+            return response
+        
+        except Exception as e:
+            return {"errors": "422: Unprocessable Entity", "message": str(e)}, 422
+
+class CountyByID(Resource):
+
+    def get(self, id):
+        county = County.query.filter_by(id=id).first()
+
+        if not county:
+            return {"error": "County not found."}, 404
+
+        return make_response(county.to_dict(), 200) 
+
+    def patch(self, id):
+        data = request.get_json()
+        county = County.query.filter_by(id=id).first()
+
+        if not county:
+            return {"error": "County not found."}, 404
+
+        for attr in data:
+            setattr(county, attr, data[attr])
+
+        db.session.commit()
+
+        return make_response(county.to_dict(), 200)
+
+    def delete(self, id):
+        county = County.query.filter_by(id=id).first()
+
+        if not county:
+            return {"error": "County not found."}, 404
+
+        db.session.delete(county)
+        db.session.commit()
+
+        return make_response('', 204)
+
+api.add_resource(CountyResource, '/counties', endpoint='counties')
+api.add_resource(CountyByID, '/counties/<int:id>', endpoint='countybyid')
 
 
 if __name__ == '__main__':
