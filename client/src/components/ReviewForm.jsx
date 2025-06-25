@@ -1,18 +1,33 @@
-import React, {useState, useEffect } from "react";
+import React, { useState } from "react";
 
-export default function ReviewForm({ onSubmit, submitting, initialValue, editMode, onCancel }) {
-  const [text, setText] = useState(initialValue || "");
+export default function ReviewForm({ bookingId, onReviewSubmitted }) {
+  const [text, setText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    setText(initialValue || "");
-  }, [initialValue, editMode]);
-
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!text.trim()) return;
-    onSubmit(text);
-    setText("");
-  };
+    setSubmitting(true);
+
+    try {
+      const res = await fetch("/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ comment: text, booking_id: bookingId }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Failed to submit review");
+      }
+      setText("");
+      onReviewSubmitted && onReviewSubmitted();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
@@ -25,13 +40,9 @@ export default function ReviewForm({ onSubmit, submitting, initialValue, editMod
         disabled={submitting}
       />
       <button type="submit" style={{ marginTop: 8 }} disabled={submitting || !text.trim()}>
-        {submitting ? (editMode ? "Updating..." : "Submitting...") : (editMode ? "Update" : "Submit")}
+        {submitting ? "Submitting..." : "Submit"}
       </button>
-      {editMode && (
-        <button type="button" onClick={onCancel} style={{ marginLeft: 8 }}>
-          Cancel
-        </button>
-      )}
     </form>
+    
   );
 }

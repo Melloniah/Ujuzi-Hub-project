@@ -1,12 +1,11 @@
 import { useState } from 'react';
 
-function BookingForm({ worker, onBook }) {
-  const [submittedData, setSubmittedData] = useState(null);
+function BookingForm({ fundi, user, onBooked }) {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     date: '',
-    service: worker?.service || '',
+    service: fundi?.service || '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -17,13 +16,20 @@ function BookingForm({ worker, onBook }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmittedData(formData);
 
     try {
-      const response = await fetch('/bookings', {
+      const response = await fetch('/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, workerId: worker?.id }),
+        credentials: "include",
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          date: formData.date,
+          service: formData.service,
+          fundi_id: fundi?.id,
+          user_id: user?.id, // assuming you have user info
+        }),
       });
 
       if (!response.ok) {
@@ -32,12 +38,12 @@ function BookingForm({ worker, onBook }) {
       }
 
       const data = await response.json();
-      onBook(data); // send data back to parent
+      onBooked(data); // Pass booking data up for review step/modal
       setFormData({
         fullName: '',
         email: '',
         date: '',
-        service: worker?.service || '',
+        service: fundi?.service || '',
       });
     } catch (err) {
       alert(err.message);
@@ -47,34 +53,16 @@ function BookingForm({ worker, onBook }) {
   }
 
   return (
-    <div>
-      <h2>Booking for {worker.name}</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Full Name:
-          <input name="fullName" value={formData.fullName} onChange={handleChange} required />
-        </label>
-        <br />
-        <label>
-          Email:
-          <input name="email" type="email" value={formData.email} onChange={handleChange} required />
-        </label>
-        <br />
-        <label>
-          Date:
-          <input name="date" type="date" value={formData.date} onChange={handleChange} required />
-        </label>
-        <br />
-        <label>
-          Service:
-          <input name="service" value={formData.service} readOnly />
-        </label>
-        <br />
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Confirm Booking'}
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <h2>Booking for {fundi?.name}</h2>
+      <input name="fullName" value={formData.fullName} onChange={handleChange} required placeholder="Full Name" />
+      <input name="email" type="email" value={formData.email} onChange={handleChange} required placeholder="Email" />
+      <input name="date" type="date" value={formData.date} onChange={handleChange} required />
+      <input name="service" value={formData.service} readOnly />
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Submitting...' : 'Confirm Booking'}
+      </button>
+    </form>
   );
 }
 
