@@ -20,7 +20,7 @@ from flask_jwt_extended import JWTManager
 # Local imports
 
 # Instantiate app, set attributes
-app = Flask(_name_)
+app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
