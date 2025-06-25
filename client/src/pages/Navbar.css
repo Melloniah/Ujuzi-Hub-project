@@ -1,7 +1,9 @@
 nav{
     width: 200%;
     height: 10%;
+
     /* background: #0f2500; */
+
     color: #fff;
     padding: 4px 0px;
     position: fixed;
@@ -29,7 +31,7 @@ nav ul li{
   }
 
   .dark-nav{
-    background: #144750;
+    background: #04505f;
     transition: 0.5s;
 
 
@@ -59,7 +61,7 @@ nav ul li{
       top: 0;
       right: 0;
       bottom: 0;
-      background: #0f2500;
+      background: #04505f;
       z-index: -1;
       width: 200px;
       padding: 70px;
