@@ -1,4 +1,4 @@
-import react from 'react';
+
 
 function BookingCard({ booking }) {
   return (
