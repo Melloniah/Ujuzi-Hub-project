@@ -43,7 +43,7 @@ const Navbar = () => {
             </RouterLink>
           </li>
           <li>
-            <RouterLink to="/tools" onClick={() => setMobileMenu(false)}>
+            <RouterLink to="/services" onClick={() => setMobileMenu(false)}>
               Services
             </RouterLink>
           </li>
