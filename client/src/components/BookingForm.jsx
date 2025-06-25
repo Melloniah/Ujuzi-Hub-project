@@ -1,54 +1,55 @@
-import { useState } from 'react';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 
-function BookingForm({ worker, onBook }) {
-  const [submittedData, setSubmittedData] = useState(null);
+function BookingForm({ onBook }) {
+  const { id: fundiId } = useParams(); // grab fundi ID from the URL
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     date: '',
-    service: worker?.service || '',
+    service: '', // optional, can be manually typed or later auto-filled
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  }
+  };
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmittedData(formData);
 
     try {
-      const response = await fetch('/bookings', {
+      const response = await fetch('/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, workerId: worker?.id }),
+        body: JSON.stringify({ ...formData, workerId: fundiId }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to book');
+        throw new Error("Failed to book service");
       }
 
       const data = await response.json();
-      onBook(data); // send data back to parent
+      onBook?.(data); // optional callback
       setFormData({
         fullName: '',
         email: '',
         date: '',
-        service: worker?.service || '',
+        service: '',
       });
     } catch (err) {
       alert(err.message);
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div>
-      <h2>Booking for {worker.name}</h2>
+      <h2>Book This Fundi</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Full Name:
@@ -67,11 +68,11 @@ function BookingForm({ worker, onBook }) {
         <br />
         <label>
           Service:
-          <input name="service" value={formData.service} readOnly />
+          <input name="service" value={formData.service} onChange={handleChange} />
         </label>
         <br />
         <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Confirm Booking'}
+          {isSubmitting ? "Booking..." : "Book Now"}
         </button>
       </form>
     </div>

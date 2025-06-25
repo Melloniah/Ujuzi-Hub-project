@@ -1,37 +1,58 @@
-import React, {useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 
-export default function ReviewForm({ onSubmit, submitting, initialValue, editMode, onCancel }) {
-  const [text, setText] = useState(initialValue || "");
+function ReviewForm({ onReviewSubmitted }) {
+  const { id: fundiId } = useParams(); // get fundi ID from URL
+  const [text, setText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    setText(initialValue || "");
-  }, [initialValue, editMode]);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    onSubmit(text);
-    setText("");
+
+    setSubmitting(true);
+
+    try {
+      const res = await fetch("/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // only if needed for auth
+        body: JSON.stringify({
+          comment: text,
+          fundi_id: fundiId,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Failed to submit review");
+      }
+
+      setText("");
+      onReviewSubmitted?.(); // refresh list or notify parent
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
       <textarea
         value={text}
-        onChange={e => setText(e.target.value)}
+        onChange={(e) => setText(e.target.value)}
         required
-        placeholder="Write your comment..."
+        placeholder="Write your review..."
         style={{ width: "100%", minHeight: 60 }}
         disabled={submitting}
       />
       <button type="submit" style={{ marginTop: 8 }} disabled={submitting || !text.trim()}>
-        {submitting ? (editMode ? "Updating..." : "Submitting...") : (editMode ? "Update" : "Submit")}
+        {submitting ? "Submitting..." : "Submit Review"}
       </button>
-      {editMode && (
-        <button type="button" onClick={onCancel} style={{ marginLeft: 8 }}>
-          Cancel
-        </button>
-      )}
     </form>
+    
   );
 }
+
+export default ReviewForm;

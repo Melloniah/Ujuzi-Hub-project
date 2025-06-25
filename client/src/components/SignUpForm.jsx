@@ -7,7 +7,6 @@ function SignupForm({ onSuccess }) {
   const [email,setEmail] =useState("")
   const [password, setPassword] = useState("");
   const [phonenumber, setPhonenumber] = useState("")
-  const [county, setCounty] = useState("")
   const [error, setError] = useState("")
   
 
@@ -72,14 +71,6 @@ function SignupForm({ onSuccess }) {
         required
       />
 
-      <input
-        type="county"
-        name="county"
-        placeholder="Enter your county..."
-        value={county}
-        onChange={e => setCounty(e.target.value)}
-        required
-      />
 
       <button type="submit">Sign Up</button>
       {error && <div style={{color: "red"}}>{error}</div>}

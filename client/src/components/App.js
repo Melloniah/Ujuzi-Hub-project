@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Booking from "../pages/Booking";
-import Review from "../pages/Review";
+import Services from "../pages/Services";
 import Hero from "../pages/Hero";
 import Navbar from "../pages/Navbar";
 import Footer from "../pages/Footer";
@@ -11,10 +11,10 @@ import Services from "../pages/Services";
 
 
 function App() {
-  return (
+  return (    
     <div className="App">
       <Navbar />
-
+      
       <Routes>
         <Route
           path="/"
@@ -27,7 +27,11 @@ function App() {
           }
         />
         <Route path="/booking" element={<Booking />} />
-        <Route path="/review" element={<Review />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/fundi/:id" element={<FundiDetail />} />
+        <Route path="/fundi/:id/book" element={<BookingForm />} />
+        <Route path="/fundi/:id/review" element={<ReviewForm />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
 
       <Footer />
