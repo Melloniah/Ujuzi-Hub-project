@@ -7,6 +7,8 @@ import Hero from "../pages/Hero";
 import Navbar from "../pages/Navbar";
 import Footer from "../pages/Footer";
 import Contact from "../pages/Contact";
+import Services from "../pages/Services";
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
           element={
             <>
               <Hero />
+              <Services/>
               <Contact />
             </>
           }
