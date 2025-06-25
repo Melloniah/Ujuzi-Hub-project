@@ -36,13 +36,18 @@ app.config["JWT_COOKIE_SAMESITE"] = "Lax"  # or 'None' -if using HTTPS cross-ori
 
 jwt = JWTManager(app)
 
-# Define metadata, instantiate db
+# Define metadata and instantiate db (without app yet)
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 })
 db = SQLAlchemy(metadata=metadata)
-migrate = Migrate(app, db)
+
+# Then initialize db with app
 db.init_app(app)
+
+# Now create migrate, passing app and db
+migrate = Migrate(app, db)
+
 
 bcrypt = Bcrypt(app)
 
