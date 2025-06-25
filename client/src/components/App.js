@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import Booking from "../pages/Booking";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import Booking from "../pages/Booking";
 import Hero from '../pages/Hero';
+import Navbar from '../pages/Navbar';
+import Footer from '../pages/Footer';
 
 function App() {
   return (    
     <Router>
-      <Routes>
-        <Route path="/" element={<Hero/>} />
-        <Route path='/booking' element={<Booking/>} />
-      </Routes>      
+      <div className="App">
+        <Navbar />
+        
+        <Routes>
+          <Route path="/" element={<Hero />} />
+          <Route path="/booking" element={<Booking />} />
+        </Routes>
+
+        <Footer />
+      </div>
     </Router>
   );
 }
