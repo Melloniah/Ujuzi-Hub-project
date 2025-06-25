@@ -1,20 +1,26 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 
-export default function ReviewForm({ fundiId, onReviewSubmitted }) {
+function ReviewForm({ onReviewSubmitted }) {
+  const { id: fundiId } = useParams(); // get fundi ID from URL
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
+
     setSubmitting(true);
 
     try {
       const res = await fetch("/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ comment: text, fundi_id: fundiId }),
+        credentials: "include", // only if needed for auth
+        body: JSON.stringify({
+          comment: text,
+          fundi_id: fundiId,
+        }),
       });
 
       if (!res.ok) {
@@ -22,15 +28,14 @@ export default function ReviewForm({ fundiId, onReviewSubmitted }) {
         throw new Error(data.message || "Failed to submit review");
       }
 
-      const newReview = await res.json();
       setText("");
-      onReviewSubmitted?.(newReview); // send new review to parent
+      onReviewSubmitted?.(); // refresh list or notify parent
     } catch (err) {
       alert(err.message);
     } finally {
       setSubmitting(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
@@ -38,17 +43,15 @@ export default function ReviewForm({ fundiId, onReviewSubmitted }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
         required
-        placeholder="Write your comment..."
+        placeholder="Write your review..."
         style={{ width: "100%", minHeight: 60 }}
         disabled={submitting}
       />
-      <button
-        type="submit"
-        style={{ marginTop: 8 }}
-        disabled={submitting || !text.trim()}
-      >
-        {submitting ? "Submitting..." : "Submit"}
+      <button type="submit" style={{ marginTop: 8 }} disabled={submitting || !text.trim()}>
+        {submitting ? "Submitting..." : "Submit Review"}
       </button>
     </form>
   );
 }
+
+export default ReviewForm;
