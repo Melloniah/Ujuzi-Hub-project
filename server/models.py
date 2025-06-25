@@ -5,7 +5,7 @@ from sqlalchemy_serializer import SerializerMixin
 import re
 from sqlalchemy.ext.associationproxy import association_proxy
 
-from app import db
+from config import db
 
 class Service(db.Model, SerializerMixin):
     __tablename__='services'
