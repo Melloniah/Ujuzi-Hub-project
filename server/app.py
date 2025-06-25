@@ -430,5 +430,5 @@ api.add_resource(CountyResource, '/counties', endpoint='counties')
 api.add_resource(CountyByID, '/counties/<int:id>', endpoint='countybyid')
 
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(port=5555, debug=True)
