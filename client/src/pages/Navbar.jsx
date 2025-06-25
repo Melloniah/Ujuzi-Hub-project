@@ -43,7 +43,7 @@ const Navbar = () => {
             </RouterLink>
           </li>
           <li>
-            <RouterLink to="/tools" onClick={() => setMobileMenu(false)}>
+            <RouterLink to="/services" onClick={() => setMobileMenu(false)}>
               Services
             </RouterLink>
           </li>
@@ -58,7 +58,7 @@ const Navbar = () => {
             </RouterLink>
           </li>
           <li>
-            <RouterLink to="/container-login" onClick={() => setMobileMenu(false)}>
+            <RouterLink to="/login" onClick={() => setMobileMenu(false)}>
               LogIn
             </RouterLink>
           </li>
