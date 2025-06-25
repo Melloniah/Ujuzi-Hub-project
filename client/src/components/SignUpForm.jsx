@@ -1,23 +1,34 @@
+//register a new user
 import React, { useState } from 'react';
 
 // onSignUp is a prop
-function SignupForm({ onSignup }) { 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: ''
-  });
+function SignupForm({ onSuccess }) { 
+  const[name, setName ] = useState("")
+  const [email,setEmail] =useState("")
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("")
+  
 
-  const handleChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    onSignup(formData); // this will help send data to the backend using usestate and parent component
+    setError("");
+    try{
+      const res = await fetch("/signup", {
+        method: "POST",
+        header: {"Content-Type" : "application/json"},
+        body: JSON.stringify({email, password}),
+        credentials: "include", //important for cookies
+      });
+      if (res.ok){
+        onSuccess();
+      }else {
+        const data = await res.json();
+        setError(data.message || "Failed to sign up.");
+      }
+    }catch {
+      setError("Server error.");
+    }   
   };
 
   return (
@@ -27,8 +38,8 @@ function SignupForm({ onSignup }) {
       <input
         name="name"
         placeholder="Full Name"
-        value={formData.name}
-        onChange={handleChange}
+        value={name}
+        onChange={e => setName(e.target.value)}
         required
       />
 
@@ -36,8 +47,8 @@ function SignupForm({ onSignup }) {
         type="email"
         name="email"
         placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
+        value={email}
+        onChange={e => setEmail(e.target.value)}
         required
       />
 
@@ -45,12 +56,13 @@ function SignupForm({ onSignup }) {
         type="password"
         name="password"
         placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
+        value={password}
+        onChange={e => setPassword(e.target.value)}
         required
       />
 
       <button type="submit">Sign Up</button>
+      {error && <div style={{color: "red"}}>{error}</div>}
     </form>
   );
 }
