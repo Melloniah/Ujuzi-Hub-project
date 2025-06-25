@@ -25,7 +25,13 @@ nav ul li{
     list-style-type: none;
     margin: 5px 20px;
     font-size: 16px;
-    cursor: pointer;
+    cursor: pointer; 
+  }
+
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
   }
 
   .dark-nav{
