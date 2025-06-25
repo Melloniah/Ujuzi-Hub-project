@@ -22,7 +22,7 @@ function BookingForm({ onBook }) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/bookings', {
+      const response = await fetch('/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, workerId: fundiId }),
