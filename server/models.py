@@ -15,6 +15,9 @@ class Service(db.Model, SerializerMixin):
     #Relationship - To get all fundis with a specific service
     fundis = db.relationship("Fundi", back_populates="service")
 
+    #Association proxy
+    counties = association_proxy('fundis', 'county')
+
     #Serialization rules
     serialize_rules = ('-fundis.service',)
 
@@ -26,6 +29,9 @@ class County(db.Model, SerializerMixin):
 
     #Relationship
     fundis = db.relationship("Fundi", back_populates="county")
+
+    #Association proxy- get services offered in a certain county through fundis
+    services = association_proxy('fundis', 'service')
 
     #Serialization rules
     serialize_rules = ('-fundis.county',)
@@ -55,7 +61,7 @@ class Fundi(db.Model, SerializerMixin):
     @validates("price")
     def validate_prices(self, key, price):
         if price is None or not (500 <= price <= 5000):
-            raise ValueError("Price must be between 1 & 30")
+            raise ValueError("Price must be between 500 & 5000")
         return price
     
     #Email validation
