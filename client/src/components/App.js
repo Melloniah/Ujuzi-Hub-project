@@ -10,6 +10,7 @@ import Contact from "../pages/Contact";
 import FundiDetail from "../pages/FundiDetails";
 import BookingForm from "../components/BookingForm";
 import ReviewForm from "../components/ReviewForm";
+import LoginPage from "../pages/LoginPage";
 
 function App() {
   return (    
@@ -31,6 +32,7 @@ function App() {
         <Route path="/fundi/:id" element={<FundiDetail />} />
         <Route path="/fundi/:id/book" element={<BookingForm />} />
         <Route path="/fundi/:id/review" element={<ReviewForm />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
 
       <Footer />
