@@ -7,8 +7,10 @@ import Hero from "../pages/Hero";
 import Navbar from "../pages/Navbar";
 import Footer from "../pages/Footer";
 import Contact from "../pages/Contact";
-
-
+import FundiDetail from "../pages/FundiDetails";
+import BookingForm from "../components/BookingForm";
+import ReviewForm from "../components/ReviewForm";
+import LoginPage from "../pages/LoginPage";
 
 function App() {
   return (    
@@ -21,7 +23,6 @@ function App() {
           element={
             <>
               <Hero />
-              <Services/>
               <Contact />
             </>
           }
