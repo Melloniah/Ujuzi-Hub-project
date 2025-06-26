@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../pages/FundiCard.css";
+import "./FundiCard.css";
 
 export const FundiCard = ({ fundi }) => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export const FundiCard = ({ fundi }) => {
     <div className="card-container" onClick={handleCardClick}>
       <img src={fundi.image} alt={fundi.name} className="card-img" />
       <h1 className="card-title">{fundi.name}</h1>
-      <p className="card-description">{fundi.service}</p>
+     <p className="card-description">{fundi.service?.service_type}</p>
       <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", margin: "0.5rem" }}>
         <button className="card-btn" onClick={handleBookClick}>
           Book Now

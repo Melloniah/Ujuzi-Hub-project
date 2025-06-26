@@ -1,0 +1,14 @@
+
+
+.fundi-list {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.fundi-grid {
+  display: grid;
+  /* makes it mobile responsive  */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 1.5rem;
+}
