@@ -43,7 +43,7 @@ const Contact = () => {
         Our team will get back to you as soon as possible.
         </p>
         <p>
-        Let’s grow together — one message at a time!
+        Let’s grow together; one message at a time!
         </p>
         
 
