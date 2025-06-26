@@ -2,7 +2,8 @@
 
 # Standard library imports
 from random import randint, choice as rc
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+
 
 # Remote library imports
 from faker import Faker
