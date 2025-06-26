@@ -1,41 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import BookingForm from "../components/BookingForm";
 import ReviewForm from "../components/ReviewForm";
-import ReviewList from "../components/ReviewList"; // to show reviews
+import ReviewList from "../components/ReviewList";
 
 export default function FundiDetail() {
-  const { id } = useParams(); // this is the fundi ID from the URL
+  const { id } = useParams();
+  console.log("Fundi ID from URL:", id);
 
   const [fundi, setFundi] = useState(null);
   const [reviews, setReviews] = useState([]);
 
-  // Fetch fundi details
-  const fetchFundi = async () => {
+  const fetchFundi = useCallback(async () => {
     try {
       const res = await fetch(`/fundis/${id}`);
       const data = await res.json();
       setFundi(data);
     } catch (err) {
-      console.error("Failed to fetch fundi:", err);
+      console.error("Error fetching fundi:", err);
     }
-  };
+  }, [id]);
 
-  // Fetch reviews for this fundi
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       const res = await fetch(`/reviews?fundi_id=${id}`);
       const data = await res.json();
       setReviews(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("Failed to fetch reviews:", err);
+      console.error("Error fetching reviews:", err);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchFundi();
     fetchReviews();
-  }, [id]);
+  }, [fetchFundi, fetchReviews]);
 
   if (!fundi) return <p>Loading fundi details...</p>;
 
