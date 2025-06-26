@@ -8,7 +8,7 @@ import Navbar from "../pages/Navbar";
 import Footer from "../pages/Footer";
 import Contact from "../pages/Contact";
 import Services from "../pages/Services";
-
+import CTA from "../pages/CTA"
 
 function App() {
   return (
@@ -22,7 +22,9 @@ function App() {
             <>
               <Hero />
               <Services/>
+              <CTA/>
               <Contact />
+              
             </>
           }
         />
