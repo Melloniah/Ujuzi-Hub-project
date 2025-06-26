@@ -1,5 +1,5 @@
 import React from "react";
-import { FundiCard } from "./FundiCard";
+import { FundiCard } from "../components/FundiCard";
 import "../pages/Services.css";
 
 // Images
