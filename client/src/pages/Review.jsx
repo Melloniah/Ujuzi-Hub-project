@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import ReviewForm from "../components/ReviewForm";
 import ReviewList from "../components/ReviewList";
 
 export default function ReviewPage() {
+  const { id: fundiId } = useParams(); // get the fundi id from the route
+
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [editing, setEditing] = useState({ id: null, comment: "" });
 
-  // Fetch all reviews by this user
+  // Fetch only reviews for this fundi
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/reviews");
+      const res = await fetch(`/fundis/${fundiId}/reviews`);
       const data = await res.json();
       setReviews(Array.isArray(data) ? data : []);
     } catch {
@@ -23,7 +26,7 @@ export default function ReviewPage() {
 
   useEffect(() => {
     fetchReviews();
-  }, []);
+  }, [fundiId]);
 
   // Add new review
   const handleAdd = async (text) => {
@@ -32,7 +35,7 @@ export default function ReviewPage() {
       const res = await fetch("/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ comment: text }),
+        body: JSON.stringify({ comment: text, fundi_id: fundiId }),
       });
       if (res.ok) {
         await fetchReviews();
@@ -77,7 +80,7 @@ export default function ReviewPage() {
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", padding: 24 }}>
-      <h1>My Reviews</h1>
+      <h1>Add a Review for this Fundi</h1>
       {editing.id ? (
         <ReviewForm
           onSubmit={handleUpdate}
@@ -87,7 +90,11 @@ export default function ReviewPage() {
           onCancel={() => setEditing({ id: null, comment: "" })}
         />
       ) : (
-        <ReviewForm onSubmit={handleAdd} submitting={submitting} editMode={false} />
+        <ReviewForm
+          onSubmit={handleAdd}
+          submitting={submitting}
+          editMode={false}
+        />
       )}
       {loading ? <p>Loading comments...</p> : (
         <ReviewList
