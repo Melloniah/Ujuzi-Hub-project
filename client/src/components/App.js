@@ -11,6 +11,9 @@ import FundiDetail from "../pages/FundiDetails";
 import ReviewForm from "../components/ReviewForm";
 import LoginPage from "../pages/LoginPage";
 
+import Services from "../pages/Services";
+import CTA from "../pages/CTA"
+
 function App() {
   return (    
     <div className="App">
@@ -22,6 +25,8 @@ function App() {
           element={
             <>
               <Hero />
+              <Services/>
+              <CTA/>
               <Contact />
               
             </>
