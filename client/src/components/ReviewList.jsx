@@ -5,7 +5,7 @@ export default function ReviewList({ reviews }) {
 
   return (
     <ul style={{ padding: 0, listStyle: "none" }}>
-      {reviews.map((review) => (
+      {reviews.length > 0 && reviews.map((review) => (
         <li
           key={review.id}
           style={{
