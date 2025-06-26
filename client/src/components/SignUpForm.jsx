@@ -17,15 +17,20 @@ function SignupForm({ onSuccess }) {
     try{
       const res = await fetch("/signup", {
         method: "POST",
-        header: {"Content-Type" : "application/json"},
-        body: JSON.stringify({email, password}),
+      headers: { "Content-Type": "application/json" }, 
+      body: JSON.stringify({
+        username: name,                 
+        email,
+        password,
+        phone_number: phonenumber     
+      }),
         credentials: "include", //important for cookies
       });
       if (res.ok){
-        onSuccess();
+        onSuccess(); //or redirect to login/dashboard
       }else {
         const data = await res.json();
-        setError(data.message || "Failed to sign up.");
+        setError(data.message || "Failed to sign up."); //match backend error key
       }
     }catch {
       setError("Server error.");
