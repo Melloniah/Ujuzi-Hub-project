@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import FundiCard from '../components/FundiCard';
 // import FundiCard from '../components/FundiCard'; // Reused for click + buttons
