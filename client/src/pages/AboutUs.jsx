@@ -9,7 +9,7 @@ const AboutUsSection = () => {
         <div className="about-text">
           <h2>About Ujuzi Hub</h2>
           <p>
-            Ujuzi Hub was founded with one mission in mind — to connect Kenyan households and businesses
+            Ujuzi Hub was founded with one mission in mind;to connect Kenyan households and businesses
             with skilled and verified fundis including plumbers, electricians, and painters.
           </p>
           <p>
