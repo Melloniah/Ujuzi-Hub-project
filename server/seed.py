@@ -3,6 +3,7 @@
 # Standard library imports
 from random import randint, choice as rc
 from datetime import datetime, timedelta
+import requests  # added for randomuser.me API calls
 
 # Remote library imports
 from faker import Faker
@@ -35,7 +36,7 @@ if __name__ == "__main__":
 
         # Seed Services
         print("Seeding services...")
-        service_names = ["Plumbing", "Electrical", "Carpentry", "Painting"]
+        service_names = ["Plumbing", "Electrical", "Painting"]
         services = [Service(service_type=name) for name in service_names]
         db.session.add_all(services)
         db.session.commit()
@@ -58,7 +59,16 @@ if __name__ == "__main__":
         print("Seeding fundis...")
         fundis = []
         for _ in range(5):
+            # Generate a random fake person image using randomuser.me
+            response = requests.get("https://randomuser.me/api/")
+            if response.status_code == 200:
+                data = response.json()
+                image_url = data["results"][0]["picture"]["large"]
+            else:
+                image_url = "https://via.placeholder.com/400x300.png?text=No+Image"
+
             fundi = Fundi(
+                image=image_url,  # <-- updated line
                 name=fake.name(),
                 price=randint(500, 5000),
                 phonenumber=fake.phone_number(),
@@ -68,6 +78,7 @@ if __name__ == "__main__":
                 county_id=rc(counties).id
             )
             fundis.append(fundi)
+
         db.session.add_all(fundis)
         db.session.commit()
 
@@ -78,6 +89,8 @@ if __name__ == "__main__":
             user = rc(users)
             fundi = rc(fundis)
             booking = Booking(
+                full_name=fake.name(),
+                email=fake.unique.email(),
                 user_id=user.id,
                 fundi_id=fundi.id,
                 created_at=datetime.utcnow() - timedelta(days=randint(1, 30)),

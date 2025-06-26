@@ -50,6 +50,7 @@ class Fundi(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    image = db.Column(db.String, nullable=True)
     price = db.Column(db.Float)
     phonenumber = db.Column(db.String) # phone_number
     email = db.Column(db.String(100), nullable=False, unique=True)
@@ -131,8 +132,8 @@ class Booking(db.Model, SerializerMixin):
     __tablename__='bookings'
 
     id = db.Column(db.Integer, primary_key=True)
-    # full_name = db.Column(db.String, nullable=False)
-    # email = db.Column(db.String(100), nullable=False, unique=True)
+    full_name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True)
     created_at = db.Column(db.DateTime(), server_default= func.now())
     updated_at = db.Column(db.DateTime(), onupdate=func.now())
 
