@@ -25,10 +25,16 @@ export const FundiCard = ({ fundi }) => {
       <h1 className="card-title">{fundi.name}</h1>
      <p className="card-description">{fundi.service?.service_type}</p>
       <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", margin: "0.5rem" }}>
-        <button className="card-btn" onClick={handleBookClick}>
+        <button className="card-btn" onClick={(e)=>{
+          e.stopPropagation(); 
+          handleBookClick();
+          }}>
           Book Now
         </button>
-        <button className="card-btn" onClick={handleReviewClick}>
+        <button className="card-btn" onClick={(e)=>{
+          e.stopPropagation();
+          handleReviewClick();
+        }}>
           Add Review
         </button>
       </div>
