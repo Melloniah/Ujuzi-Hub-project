@@ -1,0 +1,23 @@
+.services-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .card-container {
+    width: 300px;
+    flex: 1 1 calc(33.33% - 2rem);
+    box-sizing: border-box;
+  }
+
+  .category-title {
+    margin: 1rem;
+    font-size: 1.8rem;
+    color: #04505f;
+    font-weight: bold;
+    border-left: 5px solid #04505f;
+    padding-left: 0.5rem;
+  }
+  
