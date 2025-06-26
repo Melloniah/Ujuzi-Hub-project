@@ -324,7 +324,7 @@ class FundiByID(Resource):
         if not fundi:
             return {"error": "Fundi not found."}, 404
 
-        return make_response(fundi.to_dict(rules=('-password_hash',)), 200) # Exclude password
+        return make_response(fundi.to_dict(), 200) # Exclude password
 
     def patch(self, id):
         data = request.get_json()
