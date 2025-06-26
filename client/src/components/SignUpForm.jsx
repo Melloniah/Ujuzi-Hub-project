@@ -1,5 +1,8 @@
+import '../components/SignUpForm.css';
+
 //register a new user
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // for navigation
 
 // onSignUp is a prop
 function SignupForm({ onSuccess }) { 
@@ -8,33 +11,69 @@ function SignupForm({ onSuccess }) {
   const [password, setPassword] = useState("");
   const [phonenumber, setPhonenumber] = useState("")
   const [error, setError] = useState("")
-  
 
+  const navigate = useNavigate(); // navigation hook
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    setError("");
-    try{
+  const [user, setUser] = useState()
+
+  console.log(user)
+
+  // Fetch users
+  // Extracted signup logic
+  const signupUser = async ({ username, email, password, phone_number }) => {
+    try {
       const res = await fetch("/signup", {
         method: "POST",
-      headers: { "Content-Type": "application/json" }, 
-      body: JSON.stringify({
-        username: name,                 
-        email,
-        password,
-        phone_number: phonenumber     
-      }),
-        credentials: "include", //important for cookies
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          phone_number
+        })
       });
-      if (res.ok){
-        onSuccess(); //or redirect to login/dashboard
-      }else {
-        const data = await res.json();
-        setError(data.message || "Failed to sign up."); //match backend error key
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setUser(data); // Set user in parent or global state
+        onSuccess?.(); // Call success callback if provided
+
+        // Clear form
+        setName("");
+        setEmail("");
+        setPassword("");
+        setPhonenumber("");
+
+        // Alert user
+        alert("Signup successful!");
+
+        // Redirect to login
+        navigate("/login");
+
+      } else {
+        setError(data.error || "Failed to sign up.");
       }
-    }catch {
+    } catch (err) {
+      console.error("Signup error:", err);
       setError("Server error.");
-    }   
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    // Call signup function with form data
+    await signupUser({
+      username: name,
+      email,
+      password,
+      phone_number: phonenumber
+    });
   };
 
   return (

@@ -6,7 +6,7 @@
     border-top: 1px solid #797979;
     padding: 15px 20px;
     width: 100%;
-    position: relative;
+    position: fixed;
     bottom: 0;
 }
 
