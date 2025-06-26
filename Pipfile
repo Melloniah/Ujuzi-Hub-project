@@ -10,11 +10,11 @@ Werkzeug = "2.2.2"
 sqlalchemy-serializer = "*"
 flask-restful = "*"
 flask-cors = "*"
-faker = "*"
 flask-bcrypt = "1.0.1"
 flask-jwt-extended = "*"
 flask-migrate = "*"
 flask-sqlalchemy = "*"
+faker = "*"
 
 [requires]
 python_full_version = "3.10.12"

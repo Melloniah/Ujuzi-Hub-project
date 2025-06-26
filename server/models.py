@@ -137,7 +137,9 @@ class Booking(db.Model, SerializerMixin):
     reviews = db.relationship("Review", back_populates="booking", cascade='all, delete-orphan')
 
     #Serialization rules
-    serialize_rules = ('-reviews.booking', '-fundi.bookings', '-user.bookings')
+    serialize_rules = ('-reviews.booking', '-fundi.bookings', '-user.bookings', 'fundi.name',
+    'user.username'
+)
 
 class Review(db.Model, SerializerMixin):
     __tablename__='reviews'
@@ -153,7 +155,11 @@ class Review(db.Model, SerializerMixin):
     booking = db.relationship("Booking", back_populates="reviews")
 
     #Serialization rules
-    serialize_rules = ('-booking.reviews', '-booking.user.bookings', '-booking.fundi.bookings')
+    serialize_rules = (
+    '-booking.reviews',
+    '-booking.user',
+    '-booking.fundi'
+)
 
   
 
