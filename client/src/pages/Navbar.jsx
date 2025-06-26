@@ -48,16 +48,6 @@ const Navbar = () => {
             </RouterLink>
           </li>
           <li>
-            <RouterLink to="/about" onClick={() => setMobileMenu(false)}>
-              About Us
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/contact" onClick={() => setMobileMenu(false)}>
-              Contact Us
-            </RouterLink>
-          </li>
-          <li>
             <RouterLink to="/login" onClick={() => setMobileMenu(false)}>
               LogIn
             </RouterLink>
