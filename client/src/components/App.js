@@ -23,7 +23,6 @@ function App() {
           element={
             <>
               <Hero />
-              <Services/>
               <CTA/>
               <Contact />
               
