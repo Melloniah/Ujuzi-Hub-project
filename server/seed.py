@@ -2,7 +2,7 @@
 
 # Standard library imports
 from random import randint, choice as rc
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 
 # Remote library imports
 from faker import Faker
@@ -17,7 +17,6 @@ fake = Faker()
 if __name__ == "__main__":
     with app.app_context():
         print("Starting seed...")
-
         # Drop all tables and recreate them
         print("Dropping and creating tables...")
         db.drop_all()
@@ -80,8 +79,8 @@ if __name__ == "__main__":
             booking = Booking(
                 user_id=user.id,
                 fundi_id=fundi.id,
-                created_at=datetime.utcnow() - timedelta(days=randint(1, 30)),
-                updated_at=datetime.utcnow()
+                created_at=datetime.now(timezone.utc)- timedelta(days=randint(1, 30)),
+                updated_at=datetime.now(timezone.utc)
             )
             bookings.append(booking)
         db.session.add_all(bookings)
