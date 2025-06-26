@@ -11,6 +11,9 @@ import FundiDetail from "../pages/FundiDetails";
 import ReviewForm from "../components/ReviewForm";
 import LoginPage from "../pages/LoginPage";
 import CTA from "../pages/CTA"
+import FAQ from "../pages/FAQ"
+import AboutUsSection from "../pages/AboutUs"
+
 
 function App() {
   return (    
@@ -23,7 +26,9 @@ function App() {
           element={
             <>
               <Hero />
+              <AboutUsSection/>
               <CTA/>
+              <FAQ/>
               <Contact />
               
             </>
