@@ -9,6 +9,8 @@ import Footer from "../pages/Footer";
 import Contact from "../pages/Contact";
 import Services from "../pages/Services";
 import CTA from "../pages/CTA"
+import FAQ from "../pages/FAQ"
+
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
               <Hero />
               <Services/>
               <CTA/>
+              <FAQ/>
               <Contact />
               
             </>
