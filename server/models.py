@@ -5,7 +5,7 @@ from sqlalchemy_serializer import SerializerMixin
 import re
 from sqlalchemy.ext.associationproxy import association_proxy
 
-from app import db
+from config import db
 
 class Service(db.Model, SerializerMixin):
     __tablename__='services'
@@ -20,7 +20,7 @@ class Service(db.Model, SerializerMixin):
     counties = association_proxy('fundis', 'county')
 
     #Serialization rules
-    serialize_rules = ('-fundis.service',)
+    serialize_rules = ('-fundis.service', '-counties.services',)
 
 class County(db.Model, SerializerMixin):
     __tablename__='counties'
@@ -35,7 +35,7 @@ class County(db.Model, SerializerMixin):
     services = association_proxy('fundis', 'service')
 
     #Serialization rules
-    serialize_rules = ('-fundis.county',)
+    serialize_rules = ('-fundis.county', '-services.counties',)
   
 class Fundi(db.Model, SerializerMixin):
     __tablename__='fundis'
@@ -43,7 +43,7 @@ class Fundi(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     price = db.Column(db.Float)
-    phone_number = db.Column(db.String)
+    phonenumber = db.Column(db.String) # phone_number
     email = db.Column(db.String(100), nullable=False, unique=True)
     password_hash = db.Column(db.String, nullable=False)
     service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
@@ -110,21 +110,21 @@ class User(db.Model, SerializerMixin):
             raise ValueError("Invalid email format. Must contain '@' and domain name.")
         return email
 
-    ##Phone number
-    @validates('phone_number')
-    def validate_phone(self, key, phone_number):
-        phonenumber_regex = r'^(?:\+254|254|0)7\d{8}$'
-        if not re.match(phonenumber_regex, phone_number):
-            raise ValueError("Invalid Kenyan phone number")
-        return phone_number
+    # ##Phone number
+    # @validates('phone_number')
+    # def validate_phone(self, key, phone_number):
+    #     phonenumber_regex = r'^(?:\+254|254|0)7\d{8}$'
+    #     if not re.match(phonenumber_regex, phone_number):
+    #         raise ValueError("Invalid Kenyan phone number")
+    #     return phone_number
     
 
 class Booking(db.Model, SerializerMixin):
     __tablename__='bookings'
 
     id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String, nullable=False)
-    email = db.Column(db.String(100), nullable=False, unique=True)
+    # full_name = db.Column(db.String, nullable=False)
+    # email = db.Column(db.String(100), nullable=False, unique=True)
     created_at = db.Column(db.DateTime(), server_default= func.now())
     updated_at = db.Column(db.DateTime(), onupdate=func.now())
 
