@@ -11,12 +11,12 @@ export const FundiCard = ({ fundi }) => {
 
   function handleBookClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/book`);
+    navigate(`/fundi/${fundi.id}/book`); // Fundi id & User id required # To BookingForm
   }
 
   function handleReviewClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/review`);
+    navigate(`/fundi/${fundi.id}/review`); // Capture booking id (only booking id required)
   }
 
   return (
@@ -25,13 +25,21 @@ export const FundiCard = ({ fundi }) => {
       <h1 className="card-title">{fundi.name}</h1>
      <p className="card-description">{fundi.service?.service_type}</p>
       <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", margin: "0.5rem" }}>
-        <button className="card-btn" onClick={handleBookClick}>
+        <button className="card-btn" onClick={(e)=>{
+          e.stopPropagation(); 
+          handleBookClick();
+          }}>
           Book Now
         </button>
-        <button className="card-btn" onClick={handleReviewClick}>
+        <button className="card-btn" onClick={(e)=>{
+          e.stopPropagation();
+          handleReviewClick();
+        }}>
           Add Review
         </button>
       </div>
     </div>
   );
 };
+
+export default FundiCard;

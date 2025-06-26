@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // to services (book fundi/ book now) - renders Fundicard
+import { AppContext } from '../context/Provider';
 
 function BookingForm({ onBook }) {
   const { id: fundiId } = useParams(); // grab fundi ID from the URL
+  // User id required
+  const user_id = 1 // REPLACE
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -12,6 +17,10 @@ function BookingForm({ onBook }) {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  function handleNavigate() {
+    navigate(`/services`);
+  }
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,7 +34,7 @@ function BookingForm({ onBook }) {
       const response = await fetch('/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, workerId: fundiId }),
+        body: JSON.stringify({ ...formData, fundi_id: fundiId, user_id: user_id }), // fundi_id replaced worker
       });
 
       if (!response.ok) {
@@ -48,6 +57,7 @@ function BookingForm({ onBook }) {
   };
 
   return (
+    <>
     <div>
       <h2>Book This Fundi</h2>
       <form onSubmit={handleSubmit}>
@@ -76,6 +86,9 @@ function BookingForm({ onBook }) {
         </button>
       </form>
     </div>
+
+    <button onClick={handleNavigate}>Back to services</button>
+   </>
   );
 }
 
