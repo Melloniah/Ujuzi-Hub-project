@@ -4,7 +4,7 @@ import BookingForm from '../components/BookingForm';
 import Bookingcard from '../components/BookingCard';
 
 function Booking(){
-    const location = useLocation;
+    const location = useLocation();
     const { worker } = location.state || {};
 
     const [bookings, setBookings] = useState([])
