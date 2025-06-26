@@ -41,7 +41,7 @@ class Fundi(db.Model, SerializerMixin):
     __tablename__='fundis'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
     price = db.Column(db.Float)
     phonenumber = db.Column(db.String) # phone_number
     email = db.Column(db.String(100), nullable=False, unique=True)
