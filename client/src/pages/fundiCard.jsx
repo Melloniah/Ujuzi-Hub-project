@@ -10,12 +10,12 @@ export const FundiCard = ({ fundi }) => {
 
   function handleBookClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/book`);
+    navigate(`/fundi/${fundi.id}/book`, {state: {worker: fundi} });
   }
 
   function handleReviewClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/review`);
+    navigate(`/fundi/${fundi.id}/review`, {state: { worker: fundi}});
   }
 
   return (
