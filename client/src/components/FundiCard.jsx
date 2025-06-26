@@ -11,12 +11,12 @@ export const FundiCard = ({ fundi }) => {
 
   function handleBookClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/book`);
+    navigate(`/fundi/${fundi.id}/book`); // Fundi id & User id required # To BookingForm
   }
 
   function handleReviewClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/review`);
+    navigate(`/fundi/${fundi.id}/review`); // Capture booking id (only booking id required)
   }
 
   return (
@@ -41,3 +41,5 @@ export const FundiCard = ({ fundi }) => {
     </div>
   );
 };
+
+export default FundiCard;
