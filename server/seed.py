@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
         # Seed Services
         print("Seeding services...")
-        service_names = ["Plumbing", "Electrical", "Carpentry", "Painting"]
+        service_names = ["Plumbing", "Electrical", "Painting"]
         services = [Service(service_type=name) for name in service_names]
         db.session.add_all(services)
         db.session.commit()
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         # Seed Users
         print("Seeding users...")
         users = []
-        for _ in range(5):
+        for _ in range(10):
             user = User(
                 username=fake.user_name(),
                 email=fake.unique.email(),
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         # Seed Fundis
         print("Seeding fundis...")
         fundis = []
-        for _ in range(5):
+        for _ in range(20):
             fundi = Fundi(
                 name=fake.name(),
                 price=randint(500, 5000),

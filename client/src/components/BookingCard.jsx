@@ -58,24 +58,12 @@ function BookingCard({ booking }) {
       backgroundColor: '#f9f9f9',
       boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
     }}>
-      <h3 style={{ marginBottom: '0.5rem' }}> Booking #{booking.id}</h3>
-
-      <p><strong>Service:</strong> {fundi.service.service_type}</p>
-      <p><strong>Fundi:</strong> {fundi.name} ({fundi.phonenumber})</p>
-      <p><strong>Location:</strong> {fundi.county.name}</p>
-      <p><strong>Price:</strong> Ksh {fundi.price.toLocaleString()}</p>
-
-      <hr style={{ margin: '0.75rem 0' }} />
-
-      <p><strong>User:</strong> {user.username} ({user.email})</p>
-      <p><strong>Booked On:</strong> {createdDate}</p>
-      <p><strong>Last Updated:</strong> {updatedDate}</p>
-
-      {reviews.length > 0 ? (
-        <p style={{ color: "green" }}><strong> Review Added</strong></p>
-      ) : (
-        <p style={{ color: "gray" }}><strong> No Review Yet</strong></p>
-      )}
+      <h3>Appointment</h3>
+      <p><strong>Name:</strong> {booking.fullName}</p>
+      <p><strong>Email:</strong> {booking.email}</p>
+      <p><strong>Date:</strong> {booking.date}</p>
+      <p><strong>Service:</strong> {booking.service}</p>
+      <p><strong>Fundi ID:</strong> {booking.workerId}</p>
     </div>
   );
 }
