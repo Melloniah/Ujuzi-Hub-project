@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import BookingForm from "../components/BookingForm";
 import ReviewForm from "../components/ReviewForm";
@@ -6,7 +6,8 @@ import ReviewList from "../components/ReviewList"; // to show reviews
 import { useNavigate } from "react-router-dom"; // to services (book fundi/ book now) - renders Fundicard
 
 export default function FundiDetail() {
-  const { id } = useParams(); // this is the fundi ID from the URL
+  const { id } = useParams();
+  console.log("Fundi ID from URL:", id);
 
   const [fundi, setFundi] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -25,36 +26,38 @@ export default function FundiDetail() {
     navigate(`/services`); // Fundi id & User id required # To BookingForm
   }
 
-  // Fetch fundi details
-  const fetchFundi = async () => {
+  const fetchFundi = useCallback(async () => {
     try {
       const res = await fetch(`/fundis/${id}`);
       const data = await res.json();
       setFundi(data);
     } catch (err) {
-      console.error("Failed to fetch fundi:", err);
+      console.error("Error fetching fundi:", err);
     }
-  };
+  }, [id]);
 
-  // // Fetch reviews for this fundi
-
-
-  // Map through fundi_bookings if any. Access reviews, if not empty array show reviews
+  const fetchReviews = useCallback(async () => {
+    try {
+      const res = await fetch(`/reviews?fundi_id=${id}`);
+      const data = await res.json();
+      setReviews(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+    }
+  }, [id]);
 
   useEffect(() => {
     fetchFundi();
-    // fetchReviews(); Reviews are from fundi
-  }, [id]);
+    fetchReviews();
+  }, [fetchFundi, fetchReviews]);
 
   if (!fundi) return <p>Loading fundi details...</p>;
 
   return (
     <div style={{ padding: 24, marginBottom: 20 }}>
       <h1>{fundi.name}</h1>
-      <p><strong>Service:</strong> {fundi.service.service_type}</p>
-      <p><strong>Phone:</strong> {fundi.phonenumber}</p>
-      <p><strong>County:</strong> {fundi.county?.name}</p>
-      <p><strong>Price:</strong> Ksh {fundi.price}</p>
+      <p><strong>Service:</strong> {fundi.service?.service_type}</p>  
+      <p><strong>Bio:</strong> {fundi.bio}</p>
 
       <hr />
 

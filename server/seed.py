@@ -2,7 +2,8 @@
 
 # Standard library imports
 from random import randint, choice as rc
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
+
 
 # Remote library imports
 from faker import Faker
@@ -17,7 +18,6 @@ fake = Faker()
 if __name__ == "__main__":
     with app.app_context():
         print("Starting seed...")
-
         # Drop all tables and recreate them
         print("Dropping and creating tables...")
         db.drop_all()
@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
         # Seed Services
         print("Seeding services...")
-        service_names = ["Plumbing", "Electrical", "Carpentry", "Painting"]
+        service_names = ["Plumbing", "Electrical", "Painting"]
         services = [Service(service_type=name) for name in service_names]
         db.session.add_all(services)
         db.session.commit()
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         # Seed Users
         print("Seeding users...")
         users = []
-        for _ in range(5):
+        for _ in range(10):
             user = User(
                 username=fake.user_name(),
                 email=fake.unique.email(),
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         # Seed Fundis
         print("Seeding fundis...")
         fundis = []
-        for _ in range(5):
+        for _ in range(20):
             fundi = Fundi(
                 name=fake.name(),
                 price=randint(500, 5000),
@@ -80,8 +80,8 @@ if __name__ == "__main__":
             booking = Booking(
                 user_id=user.id,
                 fundi_id=fundi.id,
-                created_at=datetime.utcnow() - timedelta(days=randint(1, 30)),
-                updated_at=datetime.utcnow()
+                created_at=datetime.now(timezone.utc)- timedelta(days=randint(1, 30)),
+                updated_at=datetime.now(timezone.utc)
             )
             bookings.append(booking)
         db.session.add_all(bookings)
