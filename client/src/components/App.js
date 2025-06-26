@@ -10,6 +10,7 @@ import Contact from "../pages/Contact";
 import Services from "../pages/Services";
 import CTA from "../pages/CTA"
 import FAQ from "../pages/FAQ"
+import AboutUsSection from "../pages/AboutUs"
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <>
               <Hero />
               <Services/>
+              <AboutUsSection/>
               <CTA/>
               <FAQ/>
               <Contact />
