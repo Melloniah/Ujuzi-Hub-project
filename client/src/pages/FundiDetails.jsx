@@ -6,6 +6,7 @@ import ReviewList from "../components/ReviewList";
 
 export default function FundiDetail() {
   const { id } = useParams();
+  console.log("Fundi ID from URL:", id);
 
   const [fundi, setFundi] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -16,7 +17,7 @@ export default function FundiDetail() {
       const data = await res.json();
       setFundi(data);
     } catch (err) {
-      console.error("Failed to fetch fundi:", err);
+      console.error("Error fetching fundi:", err);
     }
   }, [id]);
 
@@ -26,7 +27,7 @@ export default function FundiDetail() {
       const data = await res.json();
       setReviews(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("Failed to fetch reviews:", err);
+      console.error("Error fetching reviews:", err);
     }
   }, [id]);
 
