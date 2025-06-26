@@ -10,8 +10,6 @@ import Contact from "../pages/Contact";
 import FundiDetail from "../pages/FundiDetails";
 import ReviewForm from "../components/ReviewForm";
 import LoginPage from "../pages/LoginPage";
-
-import Services from "../pages/Services";
 import CTA from "../pages/CTA"
 import FAQ from "../pages/FAQ"
 import AboutUsSection from "../pages/AboutUs"
