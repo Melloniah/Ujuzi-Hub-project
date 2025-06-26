@@ -41,7 +41,7 @@ export default function FundiDetail() {
   return (
     <div style={{ padding: 24 }}>
       <h1>{fundi.name}</h1>
-      <p><strong>Service:</strong> {fundi.service}</p>
+      <p><strong>Service:</strong> {fundi.service?.service_type}</p>  
       <p><strong>Bio:</strong> {fundi.bio}</p>
 
       <hr />
