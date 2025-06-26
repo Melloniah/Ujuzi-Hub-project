@@ -9,7 +9,7 @@ function BookingCard({ booking }) {
       borderRadius: '8px',
       backgroundColor: '#f0f0f0',
     }}>
-      <h3>📅 Appointment</h3>
+      <h3>Appointment</h3>
       <p><strong>Name:</strong> {booking.fullName}</p>
       <p><strong>Email:</strong> {booking.email}</p>
       <p><strong>Date:</strong> {booking.date}</p>
