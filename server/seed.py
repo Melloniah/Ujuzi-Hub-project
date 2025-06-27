@@ -57,7 +57,7 @@ if __name__== "__main__":
         fundis = []
         for _ in range(20):
             fundi = Fundi(
-                image=image_url,  # <-- updated line
+                image=f"https://i.pravatar.cc/150?img={randint(1, 70)}",  # <-- updated line
                 name=fake.name(),
                 price=randint(500, 5000),
                 phonenumber=fake.phone_number(),
