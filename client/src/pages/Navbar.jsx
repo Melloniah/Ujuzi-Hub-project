@@ -1,6 +1,6 @@
 import "../pages/Navbar.css";
-import logo from '../Assets/Logo.png'
-import menu_icon from '../Assets/menu_icon.svg';
+import logo from '../assets/Logo.png'
+import menu_icon from '../assets/menu_icon.svg';
 import { useEffect, useState } from 'react'
 // import { Link as ScrollLink } from 'react-scroll';
 import { Link as RouterLink } from 'react-router-dom';

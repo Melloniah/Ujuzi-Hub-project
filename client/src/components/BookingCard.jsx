@@ -38,16 +38,16 @@
 import React from "react";
 
 function BookingCard({ booking }) {
-  const {
-    created_at,
-    updated_at,
-    fundi,
-    user,
-    reviews,
-  } = booking;
+  // const {
+    // created_at,
+    // updated_at,
+    // // fundi,
+    // user,
+    // reviews,
+  // } = booking;
 
-  const createdDate = new Date(created_at).toLocaleString();
-  const updatedDate = new Date(updated_at).toLocaleString();
+  // const createdDate = new Date(created_at).toLocaleString();
+  // const updatedDate = new Date(updated_at).toLocaleString();
 
   return (
     <div style={{
