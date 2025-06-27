@@ -51,10 +51,8 @@ export default function FundiDetail() {
   return (
     <div style={{ padding: 24, marginBottom: 20 }}>
       <h1>{fundi.name}</h1>
-      <p><strong>Service:</strong> {fundi.service.service_type}</p>
-      <p><strong>Phone:</strong> {fundi.phonenumber}</p>
-      <p><strong>County:</strong> {fundi.county?.name}</p>
-      <p><strong>Price:</strong> Ksh {fundi.price}</p>
+      <p><strong>Service:</strong> {fundi.service?.service_type}</p>  
+      <p><strong>Bio:</strong> {fundi.bio}</p>
 
       <hr />
 
