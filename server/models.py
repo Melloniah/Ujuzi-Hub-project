@@ -9,19 +9,17 @@ from config import db
 
 class Service(db.Model, SerializerMixin):
     __tablename__ = 'services'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     service_type = db.Column(db.String)
 
-    # Relationship - To get all fundis with a specific service
     service_fundis = db.relationship("Fundi", back_populates="service")
-
-    # Association proxy
     counties = association_proxy('service_fundis', 'county')
 
-    # Serialization rules
-    serialize_rules = ('-service_fundis.service', )
+    serialize_rules = ('-service_fundis.service',)
 
+    
+  
     @property
     def county_list(self):
         return [county.to_dict() for county in self.counties]
@@ -32,15 +30,12 @@ class County(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
-    # Relationship
-    county_fundis = db.relationship("Fundi", back_populates="county")
 
-    # Association proxy
+    county_fundis = db.relationship("Fundi", back_populates="county")
     services = association_proxy('county_fundis', 'service')
 
-    # Serialization rules
-    serialize_rules = ('-county_fundis.county', )
-
+    serialize_rules = ('-county_fundis.county',)
+  
     @property
     def service_list(self):
         return [service.to_dict() for service in self.services]
@@ -52,27 +47,31 @@ class Fundi(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=True)
     price = db.Column(db.Float)
-    phone_number = db.Column(db.String) # <-- use phone_number everywhere
+
+    phone_number = db.Column(db.String)
+   
     email = db.Column(db.String(100), nullable=False, unique=True)
     password_hash = db.Column(db.String, nullable=False)
     service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
     county_id = db.Column(db.Integer, db.ForeignKey('counties.id'))
- 
-    # Relationships
+
+
     service = db.relationship("Service", back_populates="service_fundis")
     county = db.relationship("County", back_populates="county_fundis")
     fundi_bookings = db.relationship("Booking", back_populates="fundi", cascade='all, delete-orphan')
-    
-    # Serialization rules
-    serialize_rules = ('-service.service_fundis', '-county.county_fundis', '-password_hash', )
 
-    # Validations
+    serialize_rules = ('-service.service_fundis', '-county.county_fundis', '-password_hash',)
+
+ 
+   
     @validates("price")
     def validate_prices(self, key, price):
         if price is None or not (500 <= price <= 5000):
             raise ValueError("Price must be between 500 & 5000")
         return price
-    
+
+
+   
     @validates("email")
     def validate_emails(self, key, email):
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -86,7 +85,7 @@ class Fundi(db.Model, SerializerMixin):
         if not re.match(phonenumber_regex, phone_number):
             raise ValueError("Invalid Kenyan phone number")
         return phone_number
-    
+
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     
@@ -96,13 +95,12 @@ class User(db.Model, SerializerMixin):
     phone_number = db.Column(db.String, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
 
-    # Relationship
-    user_bookings = db.relationship("Booking", back_populates="user", cascade='all, delete-orphan')
-    
-    # Serialization rules
-    serialize_rules = ('-user_bookings.user', '-password_hash', )
 
-    # Validations
+    user_bookings = db.relationship("Booking", back_populates="user", cascade='all, delete-orphan')
+
+    serialize_rules = ('-user_bookings.user', '-password_hash',)
+
+
     @validates("email")
     def validate_emails(self, key, email):
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -115,20 +113,19 @@ class Booking(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String, nullable=False)
-    email = db.Column(db.String(100), nullable=False)  # NOT unique!
+    email = db.Column(db.String(100), nullable=False)
+
     created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(db.DateTime(), onupdate=func.now())
 
     fundi_id = db.Column(db.Integer, db.ForeignKey('fundis.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    # Relationships
     user = db.relationship("User", back_populates="user_bookings")
     fundi = db.relationship("Fundi", back_populates="fundi_bookings")
     reviews = db.relationship("Review", back_populates="review_booking", cascade='all, delete-orphan')
 
-    # Serialization rules
-    serialize_rules = ('-user.user_bookings', '-fundi.fundi_bookings', '-reviews.review_booking', )
+    serialize_rules = ('-user.user_bookings', '-fundi.fundi_bookings', '-reviews.review_booking',)
 
 class Review(db.Model, SerializerMixin):
     __tablename__ = 'reviews'
@@ -140,10 +137,9 @@ class Review(db.Model, SerializerMixin):
 
     booking_id = db.Column(db.Integer, db.ForeignKey('bookings.id'))
 
-    # Relationship
     review_booking = db.relationship("Booking", back_populates="reviews")
 
-    # Serialization rules
+
     serialize_rules = (
         '-review_booking.reviews',
         '-review_booking.user.user_bookings',

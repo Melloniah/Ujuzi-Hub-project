@@ -1,8 +1,8 @@
-"""reinitializing
+"""Initial migration
 
-Revision ID: 1d9569f33a4c
+Revision ID: 2e878e7319dd
 Revises: 
-Create Date: 2025-06-27 06:22:36.408767
+Create Date: 2025-06-27 10:05:16.318765
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1d9569f33a4c'
+revision = '2e878e7319dd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,7 +42,7 @@ def upgrade():
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('image', sa.String(), nullable=True),
     sa.Column('price', sa.Float(), nullable=True),
-    sa.Column('phonenumber', sa.String(), nullable=True),
+    sa.Column('phone_number', sa.String(), nullable=True),
     sa.Column('email', sa.String(length=100), nullable=False),
     sa.Column('password_hash', sa.String(), nullable=False),
     sa.Column('service_id', sa.Integer(), nullable=True),
@@ -62,8 +62,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['fundi_id'], ['fundis.id'], name=op.f('fk_bookings_fundi_id_fundis')),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_bookings_user_id_users')),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('reviews',
     sa.Column('id', sa.Integer(), nullable=False),
