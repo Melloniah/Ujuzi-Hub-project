@@ -60,7 +60,7 @@ if __name__== "__main__":
                 image=f"https://i.pravatar.cc/150?img={randint(1, 70)}",  # <-- updated line
                 name=fake.name(),
                 price=randint(500, 5000),
-                phonenumber=fake.phone_number(),
+                phone_number=f"07{randint(0, 99999999):08d}",
                 email=fake.unique.email(),
                 password_hash=generate_password_hash("password123"),
                 service_id=rc(services).id,
