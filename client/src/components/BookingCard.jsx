@@ -1,40 +1,5 @@
 
 
-// function BookingCard({ booking }) {
-//   return (
-//     <div style={{
-//       border: '1px solid #ccc',
-//       padding: '1rem',
-//       marginBottom: '1rem',
-//       borderRadius: '8px',
-//       backgroundColor: '#f0f0f0',
-//     }}>
-//       <h3>📅 Appointment</h3>
-//       <p><strong>Name:</strong> {booking.created_at}</p>
-//       <p><strong>Email:</strong> {booking.updated_at}</p>
-//       {/* <p><strong>Date:</strong> {booking.fundi.name}</p>
-//       <p><strong>Service:</strong> {booking.user.username}</p> */}
-//       {/* <p><strong>Fundi ID:</strong> {booking.reviews}</p> */}
-//     </div>
-//   );
-// }
-// // //
-// //     id = db.Column(db.Integer, primary_key=True)
-// //     # full_name = db.Column(db.String, nullable=False)
-// //     # email = db.Column(db.String(100), nullable=False, unique=True)
-// //     created_at = db.Column(db.DateTime(), server_default= func.now())
-// //     updated_at = db.Column(db.DateTime(), onupdate=func.now())
-
-// //     fundi_id = db.Column(db.Integer, db.ForeignKey('fundis.id'))
-// //     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
-// //     #Relationship
-// //     user = db.relationship("User", back_populates= "user_bookings")
-// //     fundi = db.relationship("Fundi", back_populates = "fundi_bookings")
-// //     reviews = db.relationship("Review", back_populates="review_booking", cascade='all, delete-orphan')
-
-// export default BookingCard;
-
 import React from "react";
 
 function BookingCard({ booking }) {
