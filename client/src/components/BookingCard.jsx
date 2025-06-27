@@ -24,11 +24,11 @@ function BookingCard({ booking }) {
       boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
     }}>
       <h3>Appointment</h3>
-      <p><strong>Name:</strong> {booking.fullName}</p>
+      <p><strong>Name:</strong> {booking.full_name}</p>
       <p><strong>Email:</strong> {booking.email}</p>
       <p><strong>Date:</strong> {booking.date}</p>
       <p><strong>Service:</strong> {booking.service}</p>
-      <p><strong>Fundi ID:</strong> {booking.workerId}</p>
+      <p><strong>Fundi ID:</strong> {booking.fundi_Id}</p>
     </div>
   );
 }

@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom"; // to services (book fundi/ book now) - renders Fundicard
+import { useParams, useNavigate } from "react-router-dom";
 
-function ReviewForm({ onReviewSubmitted, bookingId }) { // bookingId from FundiDetails
-  const { id: fundiId } = useParams(); // get fundi ID from URL
+function ReviewForm({ onReviewSubmitted, bookingId }) {
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    function handleNavigate() {
+  function handleNavigate() {
     navigate(`/services`);
   }
 
@@ -22,20 +20,21 @@ function ReviewForm({ onReviewSubmitted, bookingId }) { // bookingId from FundiD
       const res = await fetch("/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // only if needed for auth
         body: JSON.stringify({
           comment: text,
-          booking_id: bookingId, // fundi_id: fundiId,
+          booking_id: bookingId, // must be valid!
         }),
       });
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.message || "Failed to submit review");
+        throw new Error(data.error || "Failed to submit review");
       }
 
       setText("");
-      onReviewSubmitted?.(); // refresh list or notify parent
+      if (onReviewSubmitted) onReviewSubmitted();
+      alert("Review submitted!");
+      navigate("/services");
     } catch (err) {
       alert(err.message);
     } finally {
@@ -45,23 +44,21 @@ function ReviewForm({ onReviewSubmitted, bookingId }) { // bookingId from FundiD
 
   return (
     <>
-    <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        required
-        placeholder="Write your review..."
-        style={{ width: "100%", minHeight: 60 }}
-        disabled={submitting}
-      />
-      <button type="submit" style={{ marginTop: 8 }} disabled={submitting || !text.trim()}>
-        {submitting ? "Submitting..." : "Submit Review"}
-      </button>
-    </form>
-    
-    <button onClick={handleNavigate}>Back to services</button>
-   </>
-    
+      <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          required
+          placeholder="Write your review..."
+          style={{ width: "100%", minHeight: 60 }}
+          disabled={submitting}
+        />
+        <button type="submit" style={{ marginTop: 8 }} disabled={submitting || !text.trim()}>
+          {submitting ? "Submitting..." : "Submit Review"}
+        </button>
+      </form>
+      <button onClick={handleNavigate}>Back to services</button>
+    </>
   );
 }
 
