@@ -75,6 +75,8 @@ if __name__ == "__main__":
         print("Seeding bookings...")
         bookings = []
         for _ in range(10):
+            username=fake.user_name(),
+            email=fake.unique.email(),
             user = rc(users)
             fundi = rc(fundis)
             booking = Booking(
