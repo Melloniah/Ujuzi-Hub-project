@@ -1,5 +1,5 @@
 import "../pages/Navbar.css";
-// import logo from '../../Assets/Logo.png'
+import logo from '../Assets/Logo.png'
 import menu_icon from '../Assets/menu_icon.svg';
 import { useEffect, useState } from 'react'
 // import { Link as ScrollLink } from 'react-scroll';
@@ -24,8 +24,13 @@ const Navbar = () => {
     };
   
     return (
-      <nav className={`container ${sticky ? "dark-nav" : ""}`}>
-        {/* <img src={logo} alt="Logo" className="logo" /> */}
+      <nav className={`navbar ${sticky ? "dark-nav" : ""}`}>
+        <img
+  src={logo}
+  alt="Logo"
+  className={`logo ${sticky ? "logo-slide-in" : "logo-slide-out"}`}
+/>
+
   
         
         <img
@@ -41,20 +46,11 @@ const Navbar = () => {
             <RouterLink to="/" onClick={() => setMobileMenu(false)}>
               Home
             </RouterLink>
+
           </li>
           <li>
             <RouterLink to="/services" onClick={() => setMobileMenu(false)}>
               Services
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/about" onClick={() => setMobileMenu(false)}>
-              About Us
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/contact" onClick={() => setMobileMenu(false)}>
-              Contact Us
             </RouterLink>
           </li>
           <li>

@@ -1,8 +1,8 @@
-"""initial migration
+"""Second migration
 
-Revision ID: ed5a48ba14fe
+Revision ID: 5536bbb19554
 Revises: 
-Create Date: 2025-06-25 22:10:36.249411
+Create Date: 2025-06-26 15:39:48.905432
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ed5a48ba14fe'
+revision = '5536bbb19554'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -39,9 +39,9 @@ def upgrade():
     )
     op.create_table('fundis',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('username', sa.String(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
     sa.Column('price', sa.Float(), nullable=True),
-    sa.Column('phone_number', sa.String(), nullable=True),
+    sa.Column('phonenumber', sa.String(), nullable=True),
     sa.Column('email', sa.String(length=100), nullable=False),
     sa.Column('password_hash', sa.String(), nullable=False),
     sa.Column('service_id', sa.Integer(), nullable=True),
@@ -53,16 +53,13 @@ def upgrade():
     )
     op.create_table('bookings',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('full_name', sa.String(), nullable=False),
-    sa.Column('email', sa.String(length=100), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('fundi_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['fundi_id'], ['fundis.id'], name=op.f('fk_bookings_fundi_id_fundis')),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_bookings_user_id_users')),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('reviews',
     sa.Column('id', sa.Integer(), nullable=False),

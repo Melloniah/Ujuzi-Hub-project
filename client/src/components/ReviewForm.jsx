@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // to services (book fundi/ book now) - renders Fundicard
 
-function ReviewForm({ onReviewSubmitted }) {
+function ReviewForm({ onReviewSubmitted, bookingId }) { // bookingId from FundiDetails
   const { id: fundiId } = useParams(); // get fundi ID from URL
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate()
+
+    function handleNavigate() {
+    navigate(`/services`);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +25,7 @@ function ReviewForm({ onReviewSubmitted }) {
         credentials: "include", // only if needed for auth
         body: JSON.stringify({
           comment: text,
-          fundi_id: fundiId,
+          booking_id: bookingId, // fundi_id: fundiId,
         }),
       });
 
@@ -38,6 +44,7 @@ function ReviewForm({ onReviewSubmitted }) {
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
       <textarea
         value={text}
@@ -51,6 +58,9 @@ function ReviewForm({ onReviewSubmitted }) {
         {submitting ? "Submitting..." : "Submit Review"}
       </button>
     </form>
+    
+    <button onClick={handleNavigate}>Back to services</button>
+   </>
     
   );
 }

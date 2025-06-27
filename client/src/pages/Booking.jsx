@@ -5,12 +5,13 @@ import Bookingcard from '../components/BookingCard';
 
 function Booking(){
     const location = useLocation();
-    const { worker } = location.state || {};
+    // const { worker } = location.state || {}; // Worker ?
 
-    const [bookings, setBookings] = useState([])
+    const [bookings, setBookings] = useState()
+    console.log('BOOKINGS: ', bookings)
 
     function fetchBookings() {
-        fetch('/bookings')
+        fetch('/booking')
         .then((res) => res.json())
         .then((data) => setBookings(data))
         .catch(() => alert('Failed to fetch bookings'));
@@ -19,19 +20,19 @@ function Booking(){
         fetchBookings();
     }, [])
 
-    if (!worker) return <p>No fundi selected. Go back and choose a worker.</p>
+    // if (!worker) return <p>No fundi selected. Go back and choose a worker.</p> // Worker needed
 
     return (
         <div  style={{ maxWidth: '600px', margin: '0 auto' }} >
-            <h2>Book an Appointment with {worker.name}</h2>
+            {/* <h2>Book an Appointment with {worker.name}</h2> */}  {/* Workers? */}
 
-            <BookingForm worker={worker} onBook={fetchBookings} />
+            {/* <BookingForm worker={worker} onBook={fetchBookings} /> */}
 
             <h3 style={{ marginTop: '2rem' }} > All Appointments </h3>
-            {bookings.length === 0 ? (
+            {bookings && bookings.length === 0 ? (
                 <p> No bookings yet.</p>
             ): (
-                bookings.map((booking) => (
+                bookings && bookings.map((booking) => (
                     <Bookingcard key={booking.id} booking={booking} />
 
                 ))

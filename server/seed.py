@@ -1,7 +1,7 @@
 # Standard library imports
 from random import randint, choice as rc
-from datetime import datetime, timedelta
-import requests  # added for randomuser.me API calls
+from datetime import datetime, timezone, timedelta
+
 
 # Remote library imports
 from faker import Faker
@@ -16,7 +16,6 @@ fake = Faker()
 if __name__== "__main__":
     with app.app_context():
         print("Starting seed...")
-
         # Drop all tables and recreate them
         print("Dropping and creating tables...")
         db.drop_all()
@@ -42,7 +41,7 @@ if __name__== "__main__":
         # Seed Users
         print("Seeding users...")
         users = []
-        for _ in range(12):
+        for _ in range(10):
             user = User(
                 username=fake.user_name(),
                 email=fake.unique.email(),
@@ -56,15 +55,7 @@ if __name__== "__main__":
         # Seed Fundis
         print("Seeding fundis...")
         fundis = []
-        for _ in range(10):
-            # Generate a random fake person image using randomuser.me
-            response = requests.get("https://randomuser.me/api/")
-            if response.status_code == 200:
-                data = response.json()
-                image_url = data["results"][0]["picture"]["large"]
-            else:
-                image_url = "https://via.placeholder.com/400x300.png?text=No+Image"
-
+        for _ in range(20):
             fundi = Fundi(
                 image=image_url,  # <-- updated line
                 name=fake.name(),
@@ -84,6 +75,8 @@ if __name__== "__main__":
         print("Seeding bookings...")
         bookings = []
         for _ in range(10):
+            username=fake.user_name(),
+            email=fake.unique.email(),
             user = rc(users)
             fundi = rc(fundis)
             booking = Booking(
@@ -91,8 +84,8 @@ if __name__== "__main__":
                 email=fake.unique.email(),
                 user_id=user.id,
                 fundi_id=fundi.id,
-                created_at=datetime.utcnow() - timedelta(days=randint(1, 30)),
-                updated_at=datetime.utcnow()
+                created_at=datetime.now(timezone.utc)- timedelta(days=randint(1, 30)),
+                updated_at=datetime.now(timezone.utc)
             )
             bookings.append(booking)
         db.session.add_all(bookings)
@@ -119,3 +112,5 @@ if __name__== "__main__":
         db.session.commit()
 
         print("Seeding complete!")
+
+

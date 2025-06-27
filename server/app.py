@@ -20,7 +20,7 @@ from flask_jwt_extended import (
 # Local imports
 from config import app, db, api, jwt, bcrypt
 # Add your model imports
-from models import User, Booking, Review, Fundi, County #
+from models import User, Booking, Review, Fundi, County, Service #
 
 
 # Views go here!
@@ -324,7 +324,7 @@ class FundiByID(Resource):
         if not fundi:
             return {"error": "Fundi not found."}, 404
 
-        return make_response(fundi.to_dict(rules=('-password_hash',)), 200) # Exclude password
+        return make_response(fundi.to_dict(), 200) # Exclude password
 
     def patch(self, id):
         data = request.get_json()
@@ -428,6 +428,103 @@ class CountyByID(Resource):
 
 api.add_resource(CountyResource, '/counties', endpoint='counties')
 api.add_resource(CountyByID, '/counties/<int:id>', endpoint='countybyid')
+# Service CRUD
+class ServiceResource(Resource):
+
+    def get(self):
+        services = [service.to_dict() for service in Service.query.all()]
+
+        if not services:
+            return {"error": "No services found."}, 404
+
+        return make_response(jsonify(services), 200)
+
+    def post(self):
+        data = request.get_json()
+
+        try:
+            new_service = Service(
+                service_type=data.get('service_type')
+            )
+
+            db.session.add(new_service)
+            db.session.commit()
+
+            return make_response(new_service.to_dict(), 201)
+
+        except Exception as e:
+            return {"errors": "422: Unprocessable Entity", "message": str(e)}, 422
+
+
+class ServiceByID(Resource):
+
+    def get(self, id):
+        service = Service.query.filter_by(id=id).first()
+
+        if not service:
+            return {"error": "Service not found."}, 404
+
+        return make_response(service.to_dict(), 200)
+
+    def patch(self, id):
+        data = request.get_json()
+        service = Service.query.filter_by(id=id).first()
+
+        if not service:
+            return {"error": "Service not found."}, 404
+
+        for attr in data:
+            setattr(service, attr, data[attr])
+
+        db.session.commit()
+
+        return make_response(service.to_dict(), 200)
+
+    def delete(self, id):
+        service = Service.query.filter_by(id=id).first()
+
+        if not service:
+            return {"error": "Service not found."}, 404
+
+        db.session.delete(service)
+        db.session.commit()
+
+        return make_response('', 204)
+
+
+# Register endpoints
+api.add_resource(ServiceResource, '/services', endpoint='services')
+api.add_resource(ServiceByID, '/services/<int:id>', endpoint='servicebyid')
+
+#  Custom Route 1: Services in a County
+@app.route('/county_services/<int:county_id>', methods=['GET'])
+def get_county_services(county_id):
+    county = County.query.get(county_id)
+    
+    if not county:
+        return jsonify({"error": "County not found"}), 404
+    
+    services = [service.to_dict() for service in county.services]
+
+    return jsonify({
+        "county": county.name,
+        "services": services
+    }), 200
+
+# Custom Route 2: Counties with a Specific Service
+@app.route('/service_counties/<int:service_id>', methods=['GET'])
+def get_service_counties(service_id):
+    service = Service.query.get(service_id)
+
+    if not service:
+        return jsonify({"error": "Service not found"}), 404
+
+    counties = [county.to_dict() for county in service.counties]
+
+    return jsonify({
+        "service": service.service_type,
+        "counties": counties
+    }), 200
 
 
 if __name__ == '__main__':
