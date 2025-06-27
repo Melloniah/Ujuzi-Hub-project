@@ -151,9 +151,12 @@ class BookingResource(Resource):
     def post(self):
 
         data = request.get_json()
+        print(data)
 
         try:
             new_booking = Booking(
+                full_name=data.get('full_name'),
+                email=data.get('email'),
                 fundi_id =data.get('fundi_id'),
                 user_id =data.get('user_id'),
             )
@@ -222,6 +225,7 @@ class ReviewResource(Resource):
 
     def post(self):
         data = request.get_json()
+        print('REVIEW POST DATA: ', data)
 
         try:
             new_review = Review(
@@ -294,6 +298,7 @@ class FundiResource(Resource):
         try:
             new_fundi = Fundi(
                 name=data.get('name'),
+                image=data.get('image'),
                 price=data.get('price'),
                 phonenumber=data.get('phonenumber'),
                 email=data.get('email'),

@@ -1,8 +1,8 @@
-"""initial migration
+"""reinitializing
 
-Revision ID: 46fef0dbd4be
+Revision ID: 1d9569f33a4c
 Revises: 
-Create Date: 2025-06-26 17:10:30.440300
+Create Date: 2025-06-27 06:22:36.408767
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '46fef0dbd4be'
+revision = '1d9569f33a4c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -40,6 +40,7 @@ def upgrade():
     op.create_table('fundis',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
+    sa.Column('image', sa.String(), nullable=True),
     sa.Column('price', sa.Float(), nullable=True),
     sa.Column('phonenumber', sa.String(), nullable=True),
     sa.Column('email', sa.String(length=100), nullable=False),
@@ -53,13 +54,16 @@ def upgrade():
     )
     op.create_table('bookings',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('full_name', sa.String(), nullable=False),
+    sa.Column('email', sa.String(length=100), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('fundi_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['fundi_id'], ['fundis.id'], name=op.f('fk_bookings_fundi_id_fundis')),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_bookings_user_id_users')),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
     )
     op.create_table('reviews',
     sa.Column('id', sa.Integer(), nullable=False),

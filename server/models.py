@@ -50,6 +50,7 @@ class Fundi(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    image = db.Column(db.String, nullable=True)
     price = db.Column(db.Float)
     phonenumber = db.Column(db.String) # phone_number
     email = db.Column(db.String(100), nullable=False, unique=True)
@@ -131,8 +132,8 @@ class Booking(db.Model, SerializerMixin):
     __tablename__='bookings'
 
     id = db.Column(db.Integer, primary_key=True)
-    # full_name = db.Column(db.String, nullable=False)
-    # email = db.Column(db.String(100), nullable=False, unique=True)
+    full_name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True)
     created_at = db.Column(db.DateTime(), server_default= func.now())
     updated_at = db.Column(db.DateTime(), onupdate=func.now())
 
@@ -145,7 +146,9 @@ class Booking(db.Model, SerializerMixin):
     reviews = db.relationship("Review", back_populates="review_booking", cascade='all, delete-orphan')
 
     #Serialization rules
-    serialize_rules = ('-user.user_bookings', '-fundi.fundi_bookings', '-reviews.review_booking', )
+    serialize_rules = ('-reviews.booking', '-fundi.bookings', '-user.bookings', 'fundi.name',
+    'user.username'
+)
 
 class Review(db.Model, SerializerMixin):
     __tablename__='reviews'
@@ -161,8 +164,11 @@ class Review(db.Model, SerializerMixin):
     review_booking = db.relationship("Booking", back_populates="reviews")
 
     #Serialization rules
-    serialize_rules = ('-review_booking.reviews', '-review_booking.user.user_bookings', '-review_booking.fundi.fundi_bookings', ) # , '-review_booking.user.user_bookings', '-review_booking.fundi.fundi_bookings',
-    # serialize_rules = ('-booking.reviews', '-booking.user.bookings', '-booking.fundi.bookings',)
+    serialize_rules = (
+    '-booking.reviews',
+    '-booking.user',
+    '-booking.fundi'
+)
 
   
 
