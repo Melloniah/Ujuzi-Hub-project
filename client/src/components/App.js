@@ -43,7 +43,7 @@ function App() {
         <Route path="/fundi" element={<FundiList />} />
         <Route path="/fundi/:id" element={<FundiDetail />} />
         {/* <Route path="/fundi/:id/book" element={<Booking />} /> */}
-        <Route path="/fundi/:id/review" element={<ReviewForm />} />
+        <Route path="/fundi/:id/review" element={<ReviewForm bookingId={1} />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/fundi/:id/book" element={<BookingForm />} />
       </Routes>

@@ -1,30 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import BookingForm from "../components/BookingForm";
 import ReviewForm from "../components/ReviewForm";
-import ReviewList from "../components/ReviewList"; // to show reviews
-import { useNavigate } from "react-router-dom"; // to services (book fundi/ book now) - renders Fundicard
 
 export default function FundiDetail() {
   const { id } = useParams();
-  console.log("Fundi ID from URL:", id);
-
   const [fundi, setFundi] = useState(null);
-  const [reviews, setReviews] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  // We need currentUser
-  const currentUser = 1 // GET USER AFTER SINGIN
-
-  function handleBookClick(e) {
-    e.stopPropagation();
-    navigate(`/fundi/${id}/book`); // Fundi id & User id required # To BookingForm
-  }
-
-  function handleBackToService(e) {
-    e.stopPropagation();
-    navigate(`/services`); // Fundi id & User id required # To BookingForm
-  }
+  // Simulate the current user (replace with actual auth user)
+  const currentUser = 1;
 
   const fetchFundi = useCallback(async () => {
     try {
@@ -36,59 +21,37 @@ export default function FundiDetail() {
     }
   }, [id]);
 
-  const fetchReviews = useCallback(async () => {
-    try {
-      const res = await fetch(`/reviews?fundi_id=${id}`);
-      const data = await res.json();
-      setReviews(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error fetching reviews:", err);
-    }
-  }, [id]);
-
   useEffect(() => {
     fetchFundi();
-    fetchReviews();
-  }, [fetchFundi, fetchReviews]);
+  }, [fetchFundi]);
 
   if (!fundi) return <p>Loading fundi details...</p>;
+
+  // Find the booking for this fundi by this user with no review
+  const myUnreviewedBooking = fundi.fundi_bookings?.find(
+    (booking) => booking.user_id === currentUser && booking.reviews.length === 0
+  );
 
   return (
     <div style={{ padding: 24, marginBottom: 20 }}>
       <h1>{fundi.name}</h1>
       <p><strong>Service:</strong> {fundi.service?.service_type}</p>  
-      <p><strong>Bio:</strong> {fundi.bio}</p>
-
       <hr />
-
       <h2>Book This Fundi</h2>
-      <button onClick={handleBookClick}>Book the fundi</button>
-      {/* <BookingForm onBook={() => alert("Booking successful!")} /> */}
-
+      <button onClick={() => navigate(`/fundi/${id}/book`)}>Book the fundi</button>
       <hr />
-
       <h2>Leave a Review</h2>
-
-      {/* If current user made a booking and has no review, allow them to */}
-      {currentUser && fundi.fundi_bookings.some(
-        booking => booking.user_id === currentUser.id && booking.reviews.length === 0
-      ) && (
+      {myUnreviewedBooking ? (
         <div style={{ marginBottom: 16 }}>
           <p>You booked this fundi and haven’t reviewed yet.</p>
           <ReviewForm
-            onReviewSubmitted={fetchFundi} // Refresh after submit
-            bookingId={
-              // Get the booking ID that matches this user with no review
-              fundi.fundi_bookings.find(
-                booking => booking.user_id === currentUser.id && booking.reviews.length === 0
-              )?.id
-            }
+            onReviewSubmitted={fetchFundi}
+            bookingId={myUnreviewedBooking.id}
           />
         </div>
+      ) : (
+        <p>You need a booking to leave a review.</p>
       )}
-
-      {/* Loop over all fundi.fundi_bookings. For each booking, loop over its reviews. Show the review + booking user who wrote it. 
-      -check postman /fundis/1 (for details)*/}
       <h3>Reviews</h3>
       {fundi.fundi_bookings && fundi.fundi_bookings.some(booking => booking.reviews.length > 0) ? (
         <div>
@@ -105,11 +68,8 @@ export default function FundiDetail() {
       ) : (
         <div>No reviews yet. Only users who booked this fundi can add a review.</div>
       )}
-
       <h2>Back to services</h2>
-      <button onClick={handleBackToService}>Back to services</button>
-
-
+      <button onClick={() => navigate(`/services`)}>Back to services</button>
     </div>
   );
 }
