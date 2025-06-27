@@ -1,4 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
+models.py: from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
@@ -8,7 +8,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from config import db
 
 class Service(db.Model, SerializerMixin):
-    __tablename__='services'
+    _tablename_='services'
     
     id = db.Column(db.Integer, primary_key=True)
     service_type = db.Column(db.String)
@@ -27,7 +27,7 @@ class Service(db.Model, SerializerMixin):
         return [county.to_dict() for county in self.counties]
 
 class County(db.Model, SerializerMixin):
-    __tablename__='counties'
+    _tablename_='counties'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -46,7 +46,7 @@ class County(db.Model, SerializerMixin):
         return [service.to_dict() for service in self.services]
 
 class Fundi(db.Model, SerializerMixin):
-    __tablename__='fundis'
+    _tablename_='fundis'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -94,7 +94,7 @@ class Fundi(db.Model, SerializerMixin):
     
 class User(db.Model, SerializerMixin):
 
-    __tablename__='users'
+    _tablename_='users'
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
@@ -129,7 +129,7 @@ class User(db.Model, SerializerMixin):
     
 
 class Booking(db.Model, SerializerMixin):
-    __tablename__='bookings'
+    _tablename_='bookings'
 
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String, nullable=False)
@@ -146,12 +146,10 @@ class Booking(db.Model, SerializerMixin):
     reviews = db.relationship("Review", back_populates="review_booking", cascade='all, delete-orphan')
 
     #Serialization rules
-    serialize_rules = ('-reviews.booking', '-fundi.bookings', '-user.bookings', 'fundi.name',
-    'user.username'
-)
+    serialize_rules = ('-user.user_bookings', '-fundi.fundi_bookings', '-reviews.review_booking', )
 
 class Review(db.Model, SerializerMixin):
-    __tablename__='reviews'
+    _tablename_='reviews'
 
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String, nullable=False)
@@ -164,15 +162,5 @@ class Review(db.Model, SerializerMixin):
     review_booking = db.relationship("Booking", back_populates="reviews")
 
     #Serialization rules
-    serialize_rules = (
-    '-booking.reviews',
-    '-booking.user',
-    '-booking.fundi'
-)
-
-  
-
-
-
-
-
+    serialize_rules = ('-review_booking.reviews', '-review_booking.user.user_bookings', '-review_booking.fundi.fundi_bookings', ) # , '-review_booking.user.user_bookings', '-review_booking.fundi.fundi_bookings',
+    # serialize_rules = ('-booking.reviews', '-booking.user.bookings', '-booking.fundi.bookings',)
