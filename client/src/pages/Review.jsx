@@ -11,7 +11,7 @@ export default function ReviewPage() {
   const [submitting, setSubmitting] = useState(false);
   const [editing, setEditing] = useState({ id: null, comment: "" });
 
-  // Fetch only reviews for this fundi
+  // Fetch reviews for this fundi
   const fetchReviews = async () => {
     setLoading(true);
     try {
@@ -96,7 +96,9 @@ export default function ReviewPage() {
           editMode={false}
         />
       )}
-      {loading ? <p>Loading comments...</p> : (
+      {loading ? (
+        <p>Loading comments...</p>
+      ) : (
         <ReviewList
           reviews={reviews}
           onEdit={handleEdit}
