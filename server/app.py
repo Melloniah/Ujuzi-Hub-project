@@ -358,5 +358,12 @@ def get_service_counties(service_id):
         "counties": counties
     }), 200
 
+class UsersResource(Resource):
+    def get(self):
+        users = [user.to_dict(rules=('-user_bookings', '-password_hash')) for user in User.query.all()]
+        return make_response(jsonify(users), 200)
+
+api.add_resource(UsersResource, '/users', endpoint='users')
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
