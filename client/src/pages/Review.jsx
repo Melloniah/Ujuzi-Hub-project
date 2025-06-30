@@ -4,7 +4,7 @@ import ReviewForm from "../components/ReviewForm";
 import ReviewList from "../components/ReviewList";
 
 export default function ReviewPage() {
-  const { id: fundiId } = useParams(); // get the fundi id from the route
+  const { id: fundiId } = useParams();
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -1,23 +1,28 @@
 import React from "react";
 
-export default function ReviewList({ reviews }) {
+export default function ReviewList({ reviews, onEdit, onDelete, editingId }) {
   if (!reviews.length) return <p>No reviews yet.</p>;
 
   return (
     <ul style={{ padding: 0, listStyle: "none" }}>
-      {reviews.length > 0 && reviews.map((review) => (
+      {reviews.map((review) => (
         <li
           key={review.id}
           style={{
             marginBottom: 16,
             borderBottom: "1px solid #eee",
             paddingBottom: 8,
+            background: review.id === editingId ? "#f7f7f7" : "white"
           }}
         >
           <div>
             <strong>Comment:</strong>
             <div>{review.comment}</div>
             <small>{new Date(review.created_at).toLocaleString()}</small>
+          </div>
+          <div style={{ marginTop: 4 }}>
+            {onEdit && <button onClick={() => onEdit(review)} style={{ marginRight: 8 }}>Edit</button>}
+            {onDelete && <button onClick={() => onDelete(review.id)}>Delete</button>}
           </div>
         </li>
       ))}

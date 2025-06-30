@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { FundiCard } from "../components/FundiCard"; 
+import  FundiCard  from "../components/FundiCard"; 
 import "./FundiList.css"; 
 
 export default function FundiList() {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useTheContext } from "../Provider"; // adjust path if needed
+import { useTheContext } from "../context/Provider"; // adjust path if needed
 
 export default function FundiDetail() {
   const { id } = useParams();

@@ -244,6 +244,18 @@ class FundiByID(Resource):
         db.session.commit()
         return make_response('', 204)
 
+    def get(self, id):
+        fundi = Fundi.query.filter_by(id=id).first()
+        if not fundi:
+            return {"error": "Fundi not found."}, 404
+        # Gather all reviews from this fundi's bookings
+        reviews = []
+        for booking in fundi.fundi_bookings:
+            reviews.extend([review.to_dict() for review in booking.reviews])
+        return make_response(jsonify(reviews), 200)
+
+api.add_resource(FundiReviewsByID, '/fundis/<int:id>/reviews', endpoint='fundi_reviews')
+
 api.add_resource(FundiResource, '/fundis', endpoint='fundis')
 api.add_resource(FundiByID, '/fundis/<int:id>', endpoint='fundibyid')
 
