@@ -28,7 +28,7 @@ export default function FundiDetail() {
 
   const fetchFundi = useCallback(async () => {
     try {
-      const res = await fetch(`/fundis/${id}`);
+      const res = await fetch(`/fundi/${id}`);
       const data = await res.json();
       setFundi(data);
     } catch (err) {

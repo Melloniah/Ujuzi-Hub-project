@@ -15,6 +15,7 @@ import CTA from "../pages/CTA"
 import FAQ from "../pages/FAQ"
 import AboutUsSection from "../pages/AboutUs"
 import FundiList from "../pages/FundiList"; 
+import MyBookings from "../pages/MyBookings";
 
 
 
@@ -42,10 +43,11 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/fundi" element={<FundiList />} />
         <Route path="/fundi/:id" element={<FundiDetail />} />
-        {/* <Route path="/fundi/:id/book" element={<Booking />} /> */}
         <Route path="/fundi/:id/review" element={<ReviewForm />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/fundi/:id/book" element={<BookingForm />} />
+        <Route path="/fundi/:id/book" element={<BookingForm />} /> 
+        { <Route path="/booking/:bookingId/edit" element={<BookingForm />} /> } 
+        <Route path="/my-bookings" element={<MyBookings/>} />
       </Routes>
 
     
