@@ -1,33 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import FundiCard from '../components/FundiCard'; // Reused for click + buttons
+import React, { useEffect } from 'react';
+import FundiCard from '../components/FundiCard';
+// import FundiCard from '../components/FundiCard'; // Reused for click + buttons
+import { useTheContext } from "../context/Provider"; // import your context hook
 
 const Services = () => {
-  const [services, setServices] = useState([]);
-  const [error, setError] = useState(null);
+  // const [services, setServices] = useState([]);
+  //const [error, setError] = useState(null);
+  const { services, retrieve_services, error } = useTheContext(); 
 
-  const retrieve_services = async () => {
-    try {
-      const res = await fetch("/services");
-      const data = await res.json();
-
-      if (res.ok) {
-        setServices(data);
-      } else {
-        setError(data.error || "Failed to retrieve services.");
-      }
-    } catch (err) {
-      console.error("Service-retrieval error:", err);
-      setError("Server error.");
-    }
-  };
+  // To context
 
   useEffect(() => {
     retrieve_services();
-  }, []);
+  }, [retrieve_services]);
 
   return (
     <div>
-      <h1 className="category-title">Available Services</h1>
+      <h1 className="category-title" style={{ marginTop: '50px' }}>Available Services</h1>
 
       {error && <div style={{ color: 'red' }}>{error}</div>}
 

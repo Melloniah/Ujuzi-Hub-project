@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/Provider";
@@ -12,10 +13,12 @@ function BookingForm({ onBook }) {
     email: '',
     date: '',
     service: '',
+
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+
 
   // Load booking data if editing
   useEffect(() => {
@@ -34,6 +37,7 @@ function BookingForm({ onBook }) {
     }
   }, [bookingId]);
 
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -43,6 +47,7 @@ function BookingForm({ onBook }) {
     setIsSubmitting(true);
 
     try {
+
       const url = isEditMode
         ? `/booking/${bookingId}`
         : "/booking";
@@ -61,16 +66,19 @@ function BookingForm({ onBook }) {
 
       if (!response.ok) {
         throw new Error(`Failed to ${isEditMode ? "update" : "create"} booking`);
+
       }
 
       const data = await response.json();
       onBook?.(data);
+
 
       alert(`Booking ${isEditMode ? "updated" : "created"} successfully!`);
 
       setTimeout(() => {
         navigate("/my-bookings");
       }, 300);
+
 
     } catch (err) {
       alert(err.message);
@@ -97,6 +105,7 @@ function BookingForm({ onBook }) {
   };
 
   return (
+
     <div style={{ padding: "1rem" }}>
       <h2>{isEditMode ? "Edit Booking" : "Book This Fundi"}</h2>
       <form onSubmit={handleSubmit}>
@@ -197,6 +206,7 @@ function BookingForm({ onBook }) {
         Back to Services
       </button>
     </div>
+
   );
 }
 

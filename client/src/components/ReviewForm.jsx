@@ -1,50 +1,27 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom"; // to services (book fundi/ book now) - renders Fundicard
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-function ReviewForm({ onReviewSubmitted, bookingId }) { // bookingId from FundiDetails
-  const { id: fundiId } = useParams(); // get fundi ID from URL
-  const [text, setText] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const navigate = useNavigate()
+function ReviewForm({ onSubmit, submitting, initialValue = "", editMode = false, onCancel }) {
+  const [text, setText] = useState(initialValue);
+  const navigate = useNavigate();
 
-    function handleNavigate() {
-    navigate(`/services`);
-  }
+  useEffect(() => {
+    setText(initialValue); // Reset text when editing changes
+  }, [initialValue, editMode]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
+    onSubmit(text);
+    if (!editMode) setText(""); // Clear only if adding
+  };
 
-    setSubmitting(true);
-
-    try {
-      const res = await fetch("/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // only if needed for auth
-        body: JSON.stringify({
-          comment: text,
-          booking_id: bookingId, // fundi_id: fundiId,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Failed to submit review");
-      }
-
-      setText("");
-      onReviewSubmitted?.(); // refresh list or notify parent
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setSubmitting(false);
-    }
+  const handleBackToServices = () => {
+    navigate("/services");
   };
 
   return (
-    <>
     <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
       <textarea
         value={text}
@@ -55,14 +32,30 @@ function ReviewForm({ onReviewSubmitted, bookingId }) { // bookingId from FundiD
         disabled={submitting}
       />
       <button type="submit" style={{ marginTop: 8 }} disabled={submitting || !text.trim()}>
-        {submitting ? "Submitting..." : "Submit Review"}
+        {submitting ? (editMode ? "Updating..." : "Submitting...") : (editMode ? "Update Review" : "Submit Review")}
+      </button>
+      {editMode && (
+        <button type="button" onClick={onCancel} disabled={submitting} style={{ marginLeft: 8 }}>
+          Cancel
+        </button>
+      )}
+      <button
+        type="button"
+        onClick={handleBackToServices}
+        style={{ marginLeft: 8, background: "#ffgh" }}
+      >
+        Back to Services
       </button>
     </form>
-    
-    <button onClick={handleNavigate}>Back to services</button>
-   </>
-    
   );
 }
+
+ReviewForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool,
+  initialValue: PropTypes.string,
+  editMode: PropTypes.bool,
+  onCancel: PropTypes.func,
+};
 
 export default ReviewForm;

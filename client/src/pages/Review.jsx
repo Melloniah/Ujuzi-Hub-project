@@ -4,14 +4,14 @@ import ReviewForm from "../components/ReviewForm";
 import ReviewList from "../components/ReviewList";
 
 export default function ReviewPage() {
-  const { id: fundiId } = useParams(); // get the fundi id from the route
+  const { id: fundiId } = useParams();
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [editing, setEditing] = useState({ id: null, comment: "" });
 
-  // Fetch only reviews for this fundi
+  // Fetch reviews for this fundi
   const fetchReviews = async () => {
     setLoading(true);
     try {
@@ -96,7 +96,9 @@ export default function ReviewPage() {
           editMode={false}
         />
       )}
-      {loading ? <p>Loading comments...</p> : (
+      {loading ? (
+        <p>Loading comments...</p>
+      ) : (
         <ReviewList
           reviews={reviews}
           onEdit={handleEdit}

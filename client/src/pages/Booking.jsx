@@ -1,44 +1,32 @@
-import { useLocation } from 'react-router-dom';
-import {useState, useEffect } from 'react';
-import BookingForm from '../components/BookingForm';
-import Bookingcard from '../components/BookingCard';
+import React, { useState, useEffect } from 'react';
+import BookingCard from '../components/BookingCard';
 
-function Booking(){
-    const location = useLocation();
-    // const { worker } = location.state || {}; // Worker ?
+function Booking() {
+  const [bookings, setBookings] = useState([]);
 
-    const [bookings, setBookings] = useState()
-    console.log('BOOKINGS: ', bookings)
+  function fetchBookings() {
+    fetch('/booking')
+      .then((res) => res.json())
+      .then((data) => setBookings(data))
+      .catch(() => alert('Failed to fetch bookings'));
+  }
 
-    function fetchBookings() {
-        fetch('/booking')
-        .then((res) => res.json())
-        .then((data) => setBookings(data))
-        .catch(() => alert('Failed to fetch bookings'));
-    }
-    useEffect(() => {
-        fetchBookings();
-    }, [])
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
-    // if (!worker) return <p>No fundi selected. Go back and choose a worker.</p> // Worker needed
-
-    return (
-        <div  style={{ maxWidth: '600px', margin: '0 auto' }} >
-            {/* <h2>Book an Appointment with {worker.name}</h2> */}  {/* Workers? */}
-
-            {/* <BookingForm worker={worker} onBook={fetchBookings} /> */}
-
-            <h3 style={{ marginTop: '2rem' }} > All Appointments </h3>
-            {bookings && bookings.length === 0 ? (
-                <p> No bookings yet.</p>
-            ): (
-                bookings && bookings.map((booking) => (
-                    <Bookingcard key={booking.id} booking={booking} />
-
-                ))
-            )}
-        </div>
-    );
+  return (
+    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <h3 style={{ marginTop: '2rem' }}>All Appointments</h3>
+      {bookings.length === 0 ? (
+        <p>No bookings yet.</p>
+      ) : (
+        bookings.map((booking) => (
+          <BookingCard key={booking.id} booking={booking} />
+        ))
+      )}
+    </div>
+  );
 }
 
-export default Booking
+export default Booking;
