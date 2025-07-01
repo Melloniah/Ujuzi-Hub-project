@@ -1,18 +1,12 @@
-
-
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function BookingCard({ booking }) {
-  // const {
-    // created_at,
-    // updated_at,
-    // // fundi,
-    // user,
-    // reviews,
-  // } = booking;
+  const navigate = useNavigate();
 
-  // const createdDate = new Date(created_at).toLocaleString();
-  // const updatedDate = new Date(updated_at).toLocaleString();
+  const handleEdit = () => {
+    navigate(`/booking/${booking.id}/edit`);
+  };
 
   return (
     <div style={{
@@ -28,10 +22,14 @@ function BookingCard({ booking }) {
       <p><strong>Email:</strong> {booking.email}</p>
       <p><strong>Date:</strong> {booking.date}</p>
       <p><strong>Service:</strong> {booking.service}</p>
-      <p><strong>Fundi ID:</strong> {booking.fundi_Id}</p>
+      <p><strong>Fundi ID:</strong> {booking.fundi_id}</p>
+
+      <button onClick={handleEdit} style={{ marginTop: "0.5rem" }}>
+        View / Edit
+      </button>
+
     </div>
   );
 }
 
 export default BookingCard;
-
