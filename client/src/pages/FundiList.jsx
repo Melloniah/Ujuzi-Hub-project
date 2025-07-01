@@ -1,7 +1,7 @@
-
+// src/pages/FundiList.jsx
 import React, { useEffect, useState } from "react";
-import  FundiCard  from "../components/FundiCard"; 
-import "./FundiList.css"; 
+import FundiCard from "../components/FundiCard";
+import "./FundiList.css";
 
 export default function FundiList() {
   const [fundis, setFundis] = useState([]);

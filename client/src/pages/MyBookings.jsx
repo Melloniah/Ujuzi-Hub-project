@@ -1,10 +1,10 @@
 
-import React, {useEffect, useState, useContext} from "react";
+import React, {useEffect, useState} from "react";
 import BookingCard from "../components/BookingCard";
-import {AppContext} from "../context/Provider";
+import {useTheContext} from "../context/Provider";
 
 function MyBookings(){
-    const {user}=useContext(AppContext);
+    const {user}=useTheContext();
     const [bookings, setBookings] = useState([]);
 
     useEffect(()=>{

@@ -1,61 +1,100 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useTheContext } from "../context/Provider";
 
-function ReviewForm({ onSubmit, submitting, initialValue = "", editMode = false, onCancel }) {
-  const [text, setText] = useState(initialValue);
+export default function ReviewForm() {
+  const { id } = useParams(); // fundi id
+  const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useTheContext();
 
-  useEffect(() => {
-    setText(initialValue); // Reset text when editing changes
-  }, [initialValue, editMode]);
+  // If editing, review object is passed via state
+  const editingReview = location.state?.review || null;
 
-  const handleSubmit = (e) => {
+  const [text, setText] = useState(editingReview ? editingReview.comment : "");
+  const [submitting, setSubmitting] = useState(false);
+
+  // Submit add or edit
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!text.trim()) return;
-    onSubmit(text);
-    if (!editMode) setText(""); // Clear only if adding
-  };
 
-  const handleBackToServices = () => {
-    navigate("/services");
-  };
+    setSubmitting(true);
+
+    try {
+      if (editingReview) {
+        // Update existing review
+        const res = await fetch(`/reviews/${editingReview.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ comment: text }),
+        });
+        if (!res.ok) throw new Error("Failed to update");
+        alert("Review updated!");
+      } else {
+        // Add new review
+        const res = await fetch("/reviews", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ comment: text, fundi_id: id, user_id: user.id }),
+        });
+        if (!res.ok) throw new Error("Failed to submit");
+        alert("Review submitted!");
+      }
+      navigate(`/fundi/${id}`);
+    } catch (err) {
+      alert(err.message || "Error submitting review");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  // Delete review
+  async function handleDelete() {
+    if (!editingReview) return;
+    if (!window.confirm("Are you sure you want to delete your review?")) return;
+
+    try {
+      const res = await fetch(`/reviews/${editingReview.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete");
+      alert("Review deleted!");
+      navigate(`/fundi/${id}`);
+    } catch (err) {
+      alert(err.message || "Error deleting review");
+    }
+  }
+
+  if (!user) {
+    return (
+      <div>
+        <p>Please log in to add or edit reviews.</p>
+        <button onClick={() => navigate("/login")}>Go to Login</button>
+      </div>
+    );
+  }
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
+    <form onSubmit={handleSubmit}>
+      <h2>{editingReview ? "Edit Your Review" : "Add a Review"}</h2>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         required
-        placeholder="Write your review..."
-        style={{ width: "100%", minHeight: 60 }}
         disabled={submitting}
+        placeholder="Write your review..."
+        style={{ width: "100%", minHeight: 100 }}
       />
-      <button type="submit" style={{ marginTop: 8 }} disabled={submitting || !text.trim()}>
-        {submitting ? (editMode ? "Updating..." : "Submitting...") : (editMode ? "Update Review" : "Submit Review")}
+      <button type="submit" disabled={submitting || !text.trim()}>
+        {submitting ? (editingReview ? "Updating..." : "Submitting...") : editingReview ? "Update Review" : "Submit Review"}
       </button>
-      {editMode && (
-        <button type="button" onClick={onCancel} disabled={submitting} style={{ marginLeft: 8 }}>
-          Cancel
+      {editingReview && (
+        <button type="button" onClick={handleDelete} disabled={submitting} style={{ marginLeft: 8 }}>
+          Delete Review
         </button>
       )}
-      <button
-        type="button"
-        onClick={handleBackToServices}
-        style={{ marginLeft: 8, background: "#ffgh" }}
-      >
-        Back to Services
+      <button type="button" onClick={() => navigate(`/fundi/${id}`)} style={{ marginLeft: 8 }}>
+        Cancel
       </button>
     </form>
   );
 }
-
-ReviewForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  submitting: PropTypes.bool,
-  initialValue: PropTypes.string,
-  editMode: PropTypes.bool,
-  onCancel: PropTypes.func,
-};
-
-export default ReviewForm;

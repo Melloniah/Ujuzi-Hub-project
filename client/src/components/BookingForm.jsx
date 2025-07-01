@@ -1,11 +1,12 @@
 
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { AppContext } from "../context/Provider";
+import { useTheContext } from "../context/Provider";
+import "./BookingForm.css";
 
 function BookingForm({ onBook }) {
   const { id: fundiId, bookingId } = useParams(); // fundiId for new booking, bookingId for editing
-  const { user } = useContext(AppContext);
+  const { user } = useTheContext();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -58,10 +59,12 @@ function BookingForm({ onBook }) {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...formData,
-          user_id: user?.id,
-          ...(isEditMode ? {} : { fundi_id: fundiId }),
-        }),
+        full_name: formData.fullName, // correct key
+        email: formData.email,
+       user_id: user?.id,
+       ...(isEditMode ? {} : { fundi_id: fundiId }),
+}),
+
       });
 
       if (!response.ok) {
@@ -106,7 +109,7 @@ function BookingForm({ onBook }) {
 
   return (
 
-    <div style={{ padding: "1rem" }}>
+    <div className="booking-form-container">
       <h2>{isEditMode ? "Edit Booking" : "Book This Fundi"}</h2>
       <form onSubmit={handleSubmit}>
         <label>
@@ -116,6 +119,7 @@ function BookingForm({ onBook }) {
             value={formData.fullName}
             onChange={handleChange}
             required
+            className="booking-input"
           />
         </label>
         <br />
@@ -128,6 +132,7 @@ function BookingForm({ onBook }) {
             value={formData.email}
             onChange={handleChange}
             required
+            className="booking-input"
           />
         </label>
         <br />
@@ -140,6 +145,7 @@ function BookingForm({ onBook }) {
             value={formData.date}
             onChange={handleChange}
             required
+            className="booking-input"
           />
         </label>
         <br />
@@ -150,6 +156,7 @@ function BookingForm({ onBook }) {
             name="service"
             value={formData.service}
             onChange={handleChange}
+            className="booking-input"
           />
         </label>
         <br />
@@ -157,15 +164,7 @@ function BookingForm({ onBook }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          style={{
-            padding: "0.5rem 1rem",
-            backgroundColor: isEditMode ? "#007bff" : "#28a745",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            marginTop: "1rem"
-          }}
+          className={`booking-submit-btn ${isEditMode ? "update" : "book"}`}
         >
           {isSubmitting
             ? (isEditMode ? "Updating..." : "Booking...")
@@ -176,15 +175,7 @@ function BookingForm({ onBook }) {
       {isEditMode && (
         <button
           onClick={handleDelete}
-          style={{
-            marginTop: "1rem",
-            backgroundColor: "#dc3545",
-            color: "#fff",
-            padding: "0.5rem 1rem",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer"
-          }}
+          className="booking-delete-btn"
         >
           Delete Booking
         </button>
@@ -192,16 +183,7 @@ function BookingForm({ onBook }) {
 
       <button
         onClick={() => navigate("/services")}
-        style={{
-          marginTop: "1rem",
-          backgroundColor: "#6c757d",
-          color: "#fff",
-          padding: "0.5rem 1rem",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginLeft: "1rem"
-        }}
+        className="booking-back-btn"
       >
         Back to Services
       </button>

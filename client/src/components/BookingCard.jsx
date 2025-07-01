@@ -22,7 +22,7 @@ function BookingCard({ booking }) {
       <p><strong>Email:</strong> {booking.email}</p>
       <p><strong>Date:</strong> {booking.date}</p>
       <p><strong>Service:</strong> {booking.service}</p>
-      <p><strong>Fundi ID:</strong> {booking.fundi_id}</p>
+      <p><strong>Fundi Name:</strong> {booking.fundi.name}</p>
 
       <button onClick={handleEdit} style={{ marginTop: "0.5rem" }}>
         View / Edit
