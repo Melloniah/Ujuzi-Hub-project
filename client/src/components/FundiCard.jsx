@@ -6,17 +6,17 @@ const FundiCard = ({ fundi }) => {
   const navigate = useNavigate();
 
   function handleCardClick() {
-    navigate(`/fundi/${fundi.id}`);
-  }
-
-  function handleBookClick(e) {
-    e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/book`);
+    navigate(`/fundi/${fundi.id}`); // Show fundi details & reviews
   }
 
   function handleReviewClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/review`);
+    navigate(`/fundi/${fundi.id}/review`); // Show review form page
+  }
+
+  function handleBookClick(e) {
+    e.stopPropagation();
+    navigate(`/fundi/${fundi.id}/book`); // Show booking form page
   }
 
   return (
@@ -24,7 +24,14 @@ const FundiCard = ({ fundi }) => {
       <img src={fundi.image} alt={fundi.name} className="card-img" />
       <h1 className="card-title">{fundi.name}</h1>
       <p className="card-description">{fundi.service?.service_type}</p>
-      <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", margin: "0.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "0.5rem",
+          justifyContent: "center",
+          margin: "0.5rem",
+        }}
+      >
         <button className="card-btn" onClick={handleBookClick}>
           Book Now
         </button>
@@ -37,3 +44,4 @@ const FundiCard = ({ fundi }) => {
 };
 
 export default FundiCard;
+

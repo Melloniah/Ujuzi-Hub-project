@@ -1,37 +1,23 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useTheContext } from "../context/Provider"; // adjust path if needed
+import { useTheContext } from "../context/Provider";
 
 export default function FundiDetail() {
   const { id } = useParams();
-  const { user } = useTheContext(); // get logged-in user
+  const { user } = useTheContext();
   const [fundi, setFundi] = useState(null);
-  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch all users for username lookup
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const res = await fetch("/users");
-        if (res.ok) {
-          const data = await res.json();
-          setUsers(data);
-        }
-      } catch (err) {
-        setUsers([]); // fallback if error
-      }
-    }
-    fetchUsers();
-  }, []);
-
-  // Fetch fundi details
   const fetchFundi = useCallback(async () => {
     try {
-      const res = await fetch(`/fundi/${id}`);
-      const data = await res.json();
-      setFundi(data);
-    } catch (err) {
+      const res = await fetch(`/fundis/${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setFundi(data);
+      } else {
+        setFundi(null);
+      }
+    } catch {
       setFundi(null);
     }
   }, [id]);
@@ -42,16 +28,11 @@ export default function FundiDetail() {
 
   if (!fundi) return <p>Loading fundi details...</p>;
 
-  // Helper to get username from booking
-  function getUsername(booking) {
-    if (booking.user && booking.user.username) {
-      return booking.user.username;
-    } else if (users.length && booking.user_id) {
-      const found = users.find(u => u.id === booking.user_id);
-      return found ? found.username : "Unknown user";
-    }
-    return "Unknown user";
-  }
+  // Check if user booked fundi
+  const userBooking = fundi.fundi_bookings?.find(booking => booking.user_id === user?.id);
+
+  // Check if user already reviewed
+  const userReview = userBooking?.reviews?.length > 0 ? userBooking.reviews[0] : null;
 
   return (
     <div style={{ padding: 24, marginBottom: 20 }}>
@@ -59,23 +40,48 @@ export default function FundiDetail() {
       <p><strong>Service:</strong> {fundi.service?.service_type}</p>
       <hr />
       <h3>Reviews</h3>
-      {fundi.fundi_bookings && fundi.fundi_bookings.some(booking => booking.reviews.length > 0) ? (
+      {fundi.fundi_bookings && fundi.fundi_bookings.some(b => b.reviews.length > 0) ? (
         <div>
           {fundi.fundi_bookings.map(booking =>
             booking.reviews.map(review => (
-              <div key={review.id} style={{ border: '1px solid #ddd', marginBottom: 10, padding: 10 }}>
-                <p><strong>User:</strong> {getUsername(booking)}</p>
+              <div key={review.id} style={{ border: "1px solid #ddd", marginBottom: 10, padding: 10 }}>
+                <p><strong>User:</strong> {booking.user?.username || "Unknown"}</p>
                 <p><strong>Comment:</strong> {review.comment}</p>
-                <p><strong>Date:</strong> {review.created_at}</p>
+                <p><strong>Date:</strong> {new Date(review.created_at).toLocaleDateString()}</p>
+
+                {/* Show Edit/Delete if review belongs to current user */}
+                {user && booking.user_id === user.id && (
+                  <>
+                    <button onClick={() => navigate(`/fundi/${fundi.id}/review`, { state: { review } })}>
+                      Edit Review
+                    </button>
+                    <button onClick={async () => {
+                      if(window.confirm("Delete your review?")) {
+                        await fetch(`/reviews/${review.id}`, { method: "DELETE" });
+                        fetchFundi(); // refresh data
+                        alert("Review deleted.");
+                      }
+                    }}>
+                      Delete Review
+                    </button>
+                  </>
+                )}
               </div>
             ))
           )}
         </div>
       ) : (
-        <div>No reviews yet. Only users who booked this fundi can add a review.</div>
+        <p>No reviews yet. Only users who booked this fundi can add a review.</p>
       )}
-      <h2>Back to services</h2>
-      <button onClick={() => navigate(`/services`)}>Back to services</button>
+
+      {/* Add Review button if user booked and has not reviewed */}
+      {userBooking && !userReview && (
+        <button onClick={() => navigate(`/fundi/${fundi.id}/review`)}>Add Review</button>
+      )}
+
+      <button onClick={() => navigate("/services")} style={{ marginTop: 20 }}>
+        Back to Services
+      </button>
     </div>
   );
 }
