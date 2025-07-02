@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export default function ReviewList({ reviews, onEdit, onDelete, editingId }) {
+export default function ReviewList({ reviews, onEdit, onDelete }) {
   if (!reviews.length) return <p>No reviews yet.</p>;
 
   return (
@@ -13,7 +13,7 @@ export default function ReviewList({ reviews, onEdit, onDelete, editingId }) {
             marginBottom: 16,
             borderBottom: "1px solid #eee",
             paddingBottom: 8,
-            background: review.id === editingId ? "#f7f7f7" : "white"
+            background: "white"
           }}
         >
           <div>
@@ -51,5 +51,4 @@ ReviewList.propTypes = {
   })).isRequired,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  editingId: PropTypes.number,
 };

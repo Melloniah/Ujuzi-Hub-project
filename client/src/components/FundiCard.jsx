@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"; 
 import { useNavigate } from "react-router-dom";
 import "./FundiCard.css";
 
@@ -6,17 +6,17 @@ const FundiCard = ({ fundi }) => {
   const navigate = useNavigate();
 
   function handleCardClick() {
-    navigate(`/fundi/${fundi.id}`); // Show fundi details & reviews
+    navigate(`/fundi/${fundi.id}`);
   }
 
   function handleReviewClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/review`); // Show review form page
+    navigate(`/fundi/${fundi.id}/review`);
   }
 
   function handleBookClick(e) {
     e.stopPropagation();
-    navigate(`/fundi/${fundi.id}/book`); // Show booking form page
+    navigate(`/fundi/${fundi.id}/book`);
   }
 
   return (
@@ -44,4 +44,3 @@ const FundiCard = ({ fundi }) => {
 };
 
 export default FundiCard;
-
