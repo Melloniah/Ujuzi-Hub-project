@@ -59,10 +59,12 @@ function BookingForm({ onBook }) {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-        full_name: formData.fullName, // correct key
+        full_name: formData.fullName,
         email: formData.email,
-       user_id: user?.id,
-       ...(isEditMode ? {} : { fundi_id: fundiId }),
+        date: formData.date, // ✅
+        service: formData.service, // ✅
+        user_id: user?.id,
+        ...(isEditMode ? {} : { fundi_id: fundiId }),
 }),
 
       });
