@@ -210,6 +210,7 @@ class FundiResource(Resource):
         if not fundis:
             return {"error": "No fundis found."}, 404
         return make_response(jsonify(fundis), 200)
+        
     def post(self):
         data = request.get_json()
         password = data.get('password') 

@@ -1,5 +1,5 @@
 # Standard library imports
-from random import randint, choice as rc
+from random import randint, random, choice as rc
 from datetime import datetime, timezone, timedelta
  
 
@@ -101,7 +101,7 @@ if __name__== "__main__":
         ]
         reviews = []
         for booking in bookings:
-            if randint(0, 1):  # 50% chance sometimes it will create a review sometimes not
+            if random() < 0.8: 
                 review = Review(
                     comment=rc(comments),
                     created_at=datetime.utcnow(),
