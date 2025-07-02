@@ -3,6 +3,7 @@
 from flask import request, make_response, jsonify
 from sqlalchemy.exc import IntegrityError
 from flask_restful import Resource
+from datetime import datetime
 
 from flask_jwt_extended import (
     create_access_token,
@@ -98,21 +99,27 @@ class BookingResource(Resource):
         if not booking:
             return {"error": "No booking retrieved. Please try again."}, 500
         return make_response(jsonify(booking), 200)
+    from datetime import datetime
+
     def post(self):
         data = request.get_json()
         try:
             new_booking = Booking(
-                full_name=data.get('full_name'),
-                email=data.get('email'),
-                fundi_id=data.get('fundi_id'),
-                user_id=data.get('user_id'),
-            )
+               full_name=data.get('full_name'),
+               email=data.get('email'),
+               fundi_id=data.get('fundi_id'),
+               user_id=data.get('user_id'),
+               date=datetime.strptime(data.get('date'), "%Y-%m-%d").date() if data.get('date') else None,
+               service=data.get('service')
+           )
             db.session.add(new_booking)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             return {'error': str(e)}, 422
+
         return make_response(new_booking.to_dict(), 201)
+
 
 class BookingByID(Resource):
     def get(self, id):
@@ -120,16 +127,27 @@ class BookingByID(Resource):
         if not booking:
             return {"error": "Wrong booking id. Resource not found."}, 400
         return make_response(booking.to_dict(), 200)
+        
     def patch(self, id):
         data = request.get_json()
         booking = Booking.query.filter_by(id=id).first()
         if not booking:
             return {"error": "Wrong booking id. Resource not found."}, 400
-        for attr in data:
-            setattr(booking, attr, data[attr])
-        db.session.add(booking)
-        db.session.commit()
+
+        try:
+            for attr, value in data.items():
+                if attr == 'date' and value:
+                    value = datetime.strptime(value, "%Y-%m-%d").date()
+                setattr(booking, attr, value)
+
+            db.session.add(booking)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return {'error': str(e)}, 422
+
         return make_response(booking.to_dict(), 200)
+
     def delete(self, id):
         booking = Booking.query.filter_by(id=id).first()
         if not booking:

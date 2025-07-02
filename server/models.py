@@ -115,6 +115,9 @@ class Booking(db.Model, SerializerMixin):
     full_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String(100), nullable=False)
 
+    date = db.Column(db.Date, nullable=True)  
+    service = db.Column(db.String, nullable=True)  
+
     created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(db.DateTime(), onupdate=func.now())
 
