@@ -38,6 +38,60 @@ export default function Review() {
     setLoading(false);
   }
 
+  useEffect(() => {
+    fetchReviews();
+  }, [fundiId]);
+
+  // Add review
+  async function handleAdd(text) {
+    setSubmitting(true);
+    try {
+      const res = await fetch("/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ comment: text, fundi_id: fundiId, user_id: user.id }),
+      });
+      if (res.ok) {
+        await fetchReviews();
+        navigate(`/fundi/${fundiId}`); // Go back to detail after submit
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  // Update review
+async function handleUpdate({ id, text }) {
+  setSubmitting(true);
+  try {
+    const res = await fetch(`/reviews/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ comment: text }),
+    });
+    if (res.ok) {
+      await fetchReviews();
+      navigate(`/fundi/${fundiId}`); // go back after update
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+
+  // Delete review
+  async function handleDelete(id) {
+    if (!window.confirm("Delete this comment?")) return;
+    setSubmitting(true);
+    try {
+      await fetch(`/reviews/${id}`, { method: "DELETE" });
+      await fetchReviews();
+      navigate(`/fundi/${fundiId}`);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <div style={{ maxWidth: 600, margin: "2rem auto" }}>
       <h2>{editingReview ? "Edit Your Review" : "Add a Review"}</h2>
