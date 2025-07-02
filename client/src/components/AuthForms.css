@@ -1,0 +1,70 @@
+form.auth-form {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fafafa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+form.auth-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+form.auth-form input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 16px;
+  transition: border 0.3s ease;
+}
+
+form.auth-form input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+form.auth-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 15px;
+}
+
+form.auth-form button:hover {
+  background-color: #357abd;
+}
+
+form.auth-form .error-message {
+  margin-top: 12px;
+  font-size: 14px;
+  text-align: center;
+  color: #d9534f;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  form.auth-form {
+    padding: 20px;
+    margin: 20px;
+  }
+
+  form.auth-form input,
+  form.auth-form button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

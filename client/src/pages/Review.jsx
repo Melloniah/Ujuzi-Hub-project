@@ -51,22 +51,23 @@ export default function ReviewPage() {
   }
 
   // Update review
-  async function handleUpdate({ id, text }) {
-    setSubmitting(true);
-    try {
-      const res = await fetch(`/reviews/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ comment: text }),
-      });
-      if (res.ok) {
-        await fetchReviews();
-        navigate(`/fundi/${fundiId}`); // Go back to detail after update
-      }
-    } finally {
-      setSubmitting(false);
+async function handleUpdate({ id, text }) {
+  setSubmitting(true);
+  try {
+    const res = await fetch(`/reviews/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ comment: text }),
+    });
+    if (res.ok) {
+      await fetchReviews();
+      navigate(`/fundi/${fundiId}`); // go back after update
     }
+  } finally {
+    setSubmitting(false);
   }
+}
+
 
   // Delete review
   async function handleDelete(id) {
