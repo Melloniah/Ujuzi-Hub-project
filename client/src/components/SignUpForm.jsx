@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheContext } from "../context/Provider";
+import "./SignUpForm.css"
 
 function SignupForm({ onSuccess }) {
   const [name, setName] = useState("");
